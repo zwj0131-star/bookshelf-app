@@ -491,13 +491,25 @@ function handleDeleteBook(bookId) {
 
 // 匯出 JSON 備份檔案
 function exportJsonBackup() {
-  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(books, null, 2));
+  const filename = `My_Bookshelf_Backup_${new Date().toISOString().split('T')[0]}.json`;
+  const blob = new Blob([JSON.stringify(books, null, 2)], { type: 'application/json' });
+
+  // iOS/iPadOS 獨立 App 模式下，data URI 下載連結常常無效，
+  // 改用原生分享選單讓使用者選擇「儲存到檔案」較為可靠
+  const file = new File([blob], filename, { type: 'application/json' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    navigator.share({ files: [file], title: filename }).catch(() => {});
+    return;
+  }
+
+  const url = URL.createObjectURL(blob);
   const downloadAnchor = document.createElement('a');
-  downloadAnchor.setAttribute("href", dataStr);
-  downloadAnchor.setAttribute("download", `My_Bookshelf_Backup_${new Date().toISOString().split('T')[0]}.json`);
+  downloadAnchor.href = url;
+  downloadAnchor.download = filename;
   document.body.appendChild(downloadAnchor);
   downloadAnchor.click();
   downloadAnchor.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 // 匯入 JSON 備份檔案
