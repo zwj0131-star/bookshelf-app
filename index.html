@@ -162,8 +162,10 @@
         </div>
 
         <div class="form-group">
-          <label for="book-cover">封面圖片連結 (URL 可留空使用預設圖)</label>
-          <input type="url" id="book-cover" placeholder="https://example.com/cover.jpg">
+          <label for="book-cover-file">封面圖片上傳 (可留空使用預設圖)</label>
+          <input type="file" id="book-cover-file" accept="image/*">
+          <input type="hidden" id="book-cover">
+          <img id="cover-preview" class="cover-preview hidden" src="" alt="封面預覽">
         </div>
 
         <div class="form-group">

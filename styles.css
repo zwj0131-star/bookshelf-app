@@ -462,8 +462,11 @@ body {
   transition: opacity 0.25s ease;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .modal.hidden {
-  display: none;
   opacity: 0;
   pointer-events: none;
 }
@@ -565,6 +568,7 @@ label {
 input[type="text"],
 input[type="url"],
 input[type="date"],
+input[type="file"],
 select,
 textarea {
   width: 100%;
@@ -577,6 +581,16 @@ textarea {
   outline: none;
   font-family: inherit;
   transition: var(--transition);
+}
+
+.cover-preview {
+  display: block;
+  margin-top: 10px;
+  width: 120px;
+  height: 160px;
+  object-fit: cover;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border-color);
 }
 
 input:focus, select:focus, textarea:focus {

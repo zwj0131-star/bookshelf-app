@@ -241,6 +241,36 @@ function openBookDetailModal(bookId) {
   openModal('modal-book-detail');
 }
 
+// 處理封面圖片上傳：讀取檔案、壓縮並轉為 Base64 存入隱藏欄位
+function handleCoverFileSelect(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (readerEvent) => {
+    const img = new Image();
+    img.onload = () => {
+      // 縮小圖片避免 LocalStorage 空間被過大的圖片佔滿
+      const maxSize = 500;
+      const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      document.getElementById('book-cover').value = dataUrl;
+
+      const preview = document.getElementById('cover-preview');
+      preview.src = dataUrl;
+      preview.classList.remove('hidden');
+    };
+    img.src = readerEvent.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
 // 處理新增 / 編輯表單提交
 function handleBookFormSubmit(e) {
   e.preventDefault();
@@ -296,6 +326,10 @@ function openAddBookModal() {
   document.getElementById('form-modal-title').innerHTML = '<i class="fa-solid fa-book-plus"></i> 新增書籍紀錄';
   document.getElementById('book-form').reset();
   document.getElementById('book-id').value = '';
+  document.getElementById('book-cover').value = '';
+  const preview = document.getElementById('cover-preview');
+  preview.src = '';
+  preview.classList.add('hidden');
   openModal('modal-book-form');
 }
 
@@ -312,6 +346,15 @@ function openEditBookModal(bookId) {
   document.getElementById('book-rating').value = book.rating || 3;
   document.getElementById('book-cover').value = book.cover || '';
   document.getElementById('book-summary').value = book.summary || '';
+
+  const preview = document.getElementById('cover-preview');
+  if (book.cover) {
+    preview.src = book.cover;
+    preview.classList.remove('hidden');
+  } else {
+    preview.src = '';
+    preview.classList.add('hidden');
+  }
 
   closeModal('modal-book-detail');
   openModal('modal-book-form');
@@ -482,6 +525,7 @@ function setupEventListeners() {
   // 表單事件
   document.getElementById('book-form').addEventListener('submit', handleBookFormSubmit);
   document.getElementById('borrow-form').addEventListener('submit', handleBorrowFormSubmit);
+  document.getElementById('book-cover-file').addEventListener('change', handleCoverFileSelect);
 
   // 詳細 modal 內部按鈕
   document.getElementById('btn-edit-book').addEventListener('click', () => {
