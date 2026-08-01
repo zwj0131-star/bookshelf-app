@@ -4,64 +4,7 @@
  */
 
 // 預設範例資料（供第一次載入或重置時使用）
-const DEFAULT_BOOKS = [
-  {
-    id: 'b-101',
-    title: '被討厭的勇氣：自我啟發之父阿德勒的教導',
-    author: '岸見一郎, 古賀史健',
-    category: '心理勵志',
-    rating: 5,
-    cover: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&q=80',
-    summary: '【自主學習心得筆記】\n這本書以青年與哲學家的對話形式呈現。核心概念是「所有煩惱都來自於人際關係」，強調課題分離與阿德勒心理學。對於學習調適人際壓力與建立自信有非常深刻的啟發。',
-    status: 'available', // 'available' | 'borrowed'
-    borrower: null,
-    borrowDate: null,
-    borrowNote: null,
-    createdAt: Date.now() - 86400000 * 10
-  },
-  {
-    id: 'b-102',
-    title: '原子習慣：細微改變帶來巨大成就',
-    author: 'James Clear',
-    category: '學習考照',
-    rating: 5,
-    cover: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400&q=80',
-    summary: '【書籍摘要】\n說明建立習慣的四個步驟：提示、渴望、回應、獎賞。每天進步 1%，一年後就會進步 37 倍！適合用於規劃高中自主學習計畫與讀書計畫。',
-    status: 'borrowed',
-    borrower: '陳大明（同班同學）',
-    borrowDate: '2026-07-20',
-    borrowNote: '借去研究讀書計畫方法，預計下週歸還',
-    createdAt: Date.now() - 86400000 * 7
-  },
-  {
-    id: 'b-103',
-    title: 'Python 程式設計超入門',
-    author: '彭彭',
-    category: '資訊程式',
-    rating: 4,
-    cover: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&q=80',
-    summary: '【自主學習重點】\n從變數、迴圈到函式基礎教學，內含許多範例程式碼。這是這次自主學習專案的主要參考書籍之一。',
-    status: 'available',
-    borrower: null,
-    borrowDate: null,
-    borrowNote: null,
-    createdAt: Date.now() - 86400000 * 5
-  },
-  {
-    id: 'b-104',
-    title: '人類簡史：從動物到上帝',
-    author: '哈拉瑞 (Yuval Noah Harari)',
-    category: '人文歷史',
-    rating: 5,
-    cover: 'https://images.unsplash.com/photo-1461360370896-922624d12aa1?w=400&q=80',
-    summary: '【閱讀重點】\n縱觀人類智人如何透過「想像的秩序」與共同信念建構文明。對於了解歷史脈絡與批判思考極有幫助。',
-    status: 'available',
-    borrower: null,
-    borrowDate: null,
-    borrowNote: null,
-    createdAt: Date.now() - 86400000 * 2
-  }
-];
+const DEFAULT_BOOKS = [];
 
 // 應用程式狀態 (State)
 let books = [];
@@ -492,10 +435,10 @@ function handleImportJson(e) {
   reader.readAsText(file);
 }
 
-// 重置為預設範例書籍
+// 清空所有書籍
 function resetToDemoData() {
-  if (confirm('確定要將所有書籍資料重置為初始範例書籍嗎？此操作將覆蓋目前變更。')) {
-    books = [...DEFAULT_BOOKS];
+  if (confirm('確定要清空所有書籍資料嗎？此操作無法復原。')) {
+    books = [];
     saveBooksToStorage();
     renderApp();
     closeModal('modal-backup');
