@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <!-- Apple iPad / iPhone PWA 設定 -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="個人書櫃">
+  <meta name="theme-color" content="#3b82f6">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" href="apple-touch-icon.png">
+  <title>我的個人書櫃與借閱統計小助手 | 自主學習專案</title>
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- 主容器 -->
+  <div class="app-container">
+    <!-- 頂部頁眉 -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-book-bookmark"></i>
+        </div>
+        <div>
+          <h1>我的個人書櫃與借閱統計</h1>
+          <p class="subtitle">自主學習成果展現・藏書整理與閱讀筆記</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-add-book" class="btn btn-primary">
+          <i class="fa-solid fa-plus"></i> 新增藏書
+        </button>
+        <button id="btn-export-import" class="btn btn-secondary">
+          <i class="fa-solid fa-file-export"></i> 備份/匯出
+        </button>
+      </div>
+    </header>
+
+    <!-- 統計儀表板 (Stats Dashboard) -->
+    <section class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-icon"><i class="fa-solid fa-books"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">藏書總數</span>
+          <span class="stat-value" id="stat-total">0</span>
+        </div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-icon"><i class="fa-solid fa-bookmark"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">在櫃數量</span>
+          <span class="stat-value" id="stat-available">0</span>
+        </div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-icon"><i class="fa-solid fa-hand-holding-box"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">借出中</span>
+          <span class="stat-value" id="stat-borrowed">0</span>
+        </div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-icon"><i class="fa-solid fa-tags"></i></div>
+        <div class="stat-info">
+          <span class="stat-label">書籍類別數</span>
+          <span class="stat-value" id="stat-categories">0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 控制與搜尋列 -->
+    <section class="control-panel">
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="search-input" placeholder="搜尋書名、作者、簡介或借閱者...">
+      </div>
+
+      <div class="filter-group">
+        <select id="filter-category">
+          <option value="all">所有類別</option>
+        </select>
+
+        <select id="filter-status">
+          <option value="all">所有狀態</option>
+          <option value="available">在櫃中</option>
+          <option value="borrowed">已借出</option>
+        </select>
+
+        <select id="sort-by">
+          <option value="newest">最新新增</option>
+          <option value="title">書名排序</option>
+          <option value="rating">推薦星等</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- 書籍列表 / 卡片牆 -->
+    <main class="main-content">
+      <div id="books-grid" class="books-grid">
+        <!-- 由 JavaScript 動態繪製書籍卡片 -->
+      </div>
+      <div id="empty-state" class="empty-state hidden">
+        <i class="fa-solid fa-book-open empty-icon"></i>
+        <h3>目前沒有找到符合條件的書籍</h3>
+        <p>點擊右上角「新增藏書」開始建立您的專屬書櫃吧！</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- 彈出視窗 1：新增 / 編輯書籍 -->
+  <div id="modal-book-form" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="form-modal-title"><i class="fa-solid fa-book"></i> 新增書籍紀錄</h2>
+        <button class="btn-close" data-close="modal-book-form">&times;</button>
+      </div>
+      <form id="book-form">
+        <input type="hidden" id="book-id">
+        
+        <div class="form-row">
+          <div class="form-group flex-2">
+            <label for="book-title">書名 <span class="required">*</span></label>
+            <input type="text" id="book-title" required placeholder="請輸入書名">
+          </div>
+          <div class="form-group flex-1">
+            <label for="book-author">作者</label>
+            <input type="text" id="book-author" placeholder="作者姓名">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="book-category">書籍分類</label>
+            <input type="text" id="book-category" placeholder="例如：小說、科學、自主學習" list="category-suggestions">
+            <datalist id="category-suggestions">
+              <option value="文學小說"></option>
+              <option value="科普自然"></option>
+              <option value="資訊程式"></option>
+              <option value="人文歷史"></option>
+              <option value="心理勵志"></option>
+              <option value="學習考照"></option>
+            </datalist>
+          </div>
+          <div class="form-group flex-1">
+            <label for="book-rating">推薦分數</label>
+            <select id="book-rating">
+              <option value="5">⭐⭐⭐⭐⭐ (5星最高評分)</option>
+              <option value="4">⭐⭐⭐⭐ (4星推薦)</option>
+              <option value="3" selected>⭐⭐⭐ (3星尚可)</option>
+              <option value="2">⭐⭐ (2星普通)</option>
+              <option value="1">⭐ (1星不推薦)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="book-cover">封面圖片連結 (URL 可留空使用預設圖)</label>
+          <input type="url" id="book-cover" placeholder="https://example.com/cover.jpg">
+        </div>
+
+        <div class="form-group">
+          <label for="book-summary">書籍簡介與閱讀筆記 / 心得摘要</label>
+          <textarea id="book-summary" rows="5" placeholder="寫下這本書的內容簡介、核心概念或是您的讀後心得與重點標記..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close="modal-book-form">取消</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> 儲存書籍資訊</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 彈出視窗 2：檢視詳細簡介與心得 -->
+  <div id="modal-book-detail" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content modal-lg">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-book-open-cover"></i> 書籍詳細簡介</h2>
+        <button class="btn-close" data-close="modal-book-detail">&times;</button>
+      </div>
+      <div class="detail-layout">
+        <div class="detail-cover-container">
+          <img id="detail-cover" src="" alt="封面預覽">
+          <div class="detail-badge-group">
+            <span id="detail-category-badge" class="badge"></span>
+            <span id="detail-status-badge" class="badge"></span>
+          </div>
+        </div>
+        <div class="detail-info">
+          <h3 id="detail-title"></h3>
+          <p class="detail-author"><i class="fa-solid fa-pen-nib"></i> <span id="detail-author"></span></p>
+          <div class="detail-rating" id="detail-rating"></div>
+          
+          <div class="detail-borrow-box" id="detail-borrow-box">
+            <!-- 借閱資訊動態注入 -->
+          </div>
+
+          <div class="detail-section">
+            <h4><i class="fa-solid fa-align-left"></i> 書籍簡介與筆記</h4>
+            <div id="detail-summary" class="summary-text"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" id="btn-delete-book"><i class="fa-solid fa-trash-can"></i> 刪除此書</button>
+        <button type="button" class="btn btn-secondary" id="btn-edit-book"><i class="fa-solid fa-pen"></i> 編輯簡介/內容</button>
+        <button type="button" class="btn btn-accent" id="btn-toggle-borrow-from-detail"><i class="fa-solid fa-hand-holding"></i> 登記借還</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 彈出視窗 3：借閱 / 還書管理 modal -->
+  <div id="modal-borrow" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="borrow-modal-title"><i class="fa-solid fa-handshake"></i> 登記借閱記錄</h2>
+        <button class="btn-close" data-close="modal-borrow">&times;</button>
+      </div>
+      <form id="borrow-form">
+        <input type="hidden" id="borrow-book-id">
+        <div class="book-mini-card">
+          <span class="mini-label">書籍名稱：</span>
+          <strong id="borrow-book-title-display"></strong>
+        </div>
+
+        <div class="form-group" id="group-borrower-name">
+          <label for="borrower-name">借閱者姓名 <span class="required">*</span></label>
+          <input type="text" id="borrower-name" placeholder="例如：陳大明（同班同學）">
+        </div>
+
+        <div class="form-group" id="group-borrow-date">
+          <label for="borrow-date">借出日期</label>
+          <input type="date" id="borrow-date">
+        </div>
+
+        <div class="form-group" id="group-borrow-note">
+          <label for="borrow-note">備註說明</label>
+          <input type="text" id="borrow-note" placeholder="例如：自主學習研討借閱、預計下週歸還">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close="modal-borrow">取消</button>
+          <button type="submit" class="btn btn-primary" id="btn-confirm-borrow"><i class="fa-solid fa-check"></i> 確認登記</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 彈出視窗 4：資料備份與匯入 -->
+  <div id="modal-backup" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="fa-solid fa-floppy-disk-pen"></i> 自主學習成果與資料備份</h2>
+        <button class="btn-close" data-close="modal-backup">&times;</button>
+      </div>
+      <div class="backup-body">
+        <p>您可以將目前的書櫃資料與簡介筆記匯出成 JSON 檔案備份，或是作為自主學習專案成果呈現！</p>
+        <div class="backup-actions">
+          <button id="btn-download-json" class="btn btn-primary btn-block">
+            <i class="fa-solid fa-download"></i> 下載備份 JSON 檔案
+          </button>
+          <hr class="divider">
+          <div class="import-box">
+            <label for="import-file" class="btn btn-secondary btn-block">
+              <i class="fa-solid fa-file-import"></i> 匯入已備份 JSON 檔案
+            </label>
+            <input type="file" id="import-file" accept=".json" style="display: none;">
+          </div>
+          <button id="btn-reset-demo" class="btn btn-outline-danger btn-block">
+            <i class="fa-solid fa-rotate-left"></i> 重置為範例書籍資料
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
