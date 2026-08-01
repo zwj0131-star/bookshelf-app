@@ -241,6 +241,55 @@ function openBookDetailModal(bookId) {
   openModal('modal-book-detail');
 }
 
+// 依書名或 ISBN 向 Google Books 查詢資料，自動帶入作者/分類/簡介/封面
+async function handleAutoFillBook() {
+  const query = document.getElementById('book-title').value.trim();
+  if (!query) {
+    alert('請先在「書名」欄位輸入書名或 ISBN，再按此按鈕查詢。');
+    return;
+  }
+
+  const btn = document.getElementById('btn-auto-fill');
+  const originalText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 查詢中...';
+
+  try {
+    const cleaned = query.replace(/[\s-]/g, '');
+    const isIsbn = /^[0-9]{9,13}[0-9Xx]?$/.test(cleaned);
+    const q = isIsbn ? `isbn:${cleaned}` : encodeURIComponent(query);
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (!data.items || data.items.length === 0) {
+      alert('查無符合的書籍資料，請確認書名/ISBN 是否正確，或改為手動輸入。');
+      return;
+    }
+
+    const info = data.items[0].volumeInfo;
+    document.getElementById('book-title').value = info.title || query;
+    if (info.authors) document.getElementById('book-author').value = info.authors.join('、');
+    if (info.categories && info.categories[0]) document.getElementById('book-category').value = info.categories[0];
+    if (info.description) document.getElementById('book-summary').value = info.description;
+
+    if (info.imageLinks) {
+      const coverUrl = (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail).replace('http://', 'https://');
+      document.getElementById('book-cover').value = coverUrl;
+      const preview = document.getElementById('cover-preview');
+      preview.src = coverUrl;
+      preview.classList.remove('hidden');
+    }
+  } catch (err) {
+    console.error('自動查詢書籍資料失敗', err);
+    alert('查詢失敗，請確認網路連線後再試一次。');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }
+}
+
 // 處理封面圖片上傳：讀取檔案、壓縮並轉為 Base64 存入隱藏欄位
 function handleCoverFileSelect(e) {
   const file = e.target.files[0];
@@ -526,6 +575,7 @@ function setupEventListeners() {
   document.getElementById('book-form').addEventListener('submit', handleBookFormSubmit);
   document.getElementById('borrow-form').addEventListener('submit', handleBorrowFormSubmit);
   document.getElementById('book-cover-file').addEventListener('change', handleCoverFileSelect);
+  document.getElementById('btn-auto-fill').addEventListener('click', handleAutoFillBook);
 
   // 詳細 modal 內部按鈕
   document.getElementById('btn-edit-book').addEventListener('click', () => {
