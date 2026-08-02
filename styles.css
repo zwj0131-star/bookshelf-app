@@ -1,15 +1,15 @@
 /* 核心設計系統與 Token 定義 */
 :root {
-  --bg-main: #f8fafc;
-  --bg-card: #ffffff;
+  --bg-main: #fbe9ef;
+  --bg-card: #fffafb;
   --bg-sidebar: #0f172a;
-  --primary-color: #3b82f6;
-  --primary-hover: #2563eb;
-  --primary-light: #eff6ff;
+  --primary-color: #5b9bd9;
+  --primary-hover: #3f82c2;
+  --primary-light: #eaf4fc;
   --secondary-color: #64748b;
   --secondary-hover: #475569;
-  --accent-color: #8b5cf6;
-  --accent-light: #f5f3ff;
+  --accent-color: #e37fa8;
+  --accent-light: #fdedf3;
   --success-color: #10b981;
   --success-light: #ecfdf5;
   --warning-color: #f59e0b;
@@ -85,7 +85,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(91, 155, 217, 0.35);
 }
 
 .header-brand h1 {
@@ -124,7 +124,7 @@ body {
 }
 .btn-primary:hover {
   background-color: var(--primary-hover);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 12px rgba(63, 130, 194, 0.3);
 }
 
 .btn-secondary {
@@ -141,7 +141,7 @@ body {
   color: white;
 }
 .btn-accent:hover {
-  background-color: #7c3aed;
+  background-color: #c65e8c;
 }
 
 .btn-outline-danger {
@@ -255,7 +255,7 @@ body {
 
 .search-bar input:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 0 0 3px rgba(91, 155, 217, 0.18);
 }
 
 .filter-group {
@@ -268,7 +268,7 @@ body {
   padding: 10px 16px;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
-  background-color: #fff;
+  background-color: var(--bg-card);
   font-size: 0.9rem;
   color: var(--text-main);
   outline: none;
@@ -483,7 +483,7 @@ body {
 
 .modal-content {
   position: relative;
-  background: #ffffff;
+  background: var(--bg-card);
   width: 90%;
   max-width: 540px;
   max-height: 90vh;
@@ -577,7 +577,7 @@ textarea {
   border-radius: var(--border-radius-sm);
   font-size: 0.95rem;
   color: var(--text-main);
-  background-color: #fff;
+  background-color: var(--bg-card);
   outline: none;
   font-family: inherit;
   transition: var(--transition);
@@ -595,7 +595,7 @@ textarea {
 
 input:focus, select:focus, textarea:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 0 0 3px rgba(91, 155, 217, 0.18);
 }
 
 .modal-footer {
@@ -694,7 +694,7 @@ input:focus, select:focus, textarea:focus {
   padding: 12px 16px;
   border-radius: var(--border-radius-sm);
   margin-bottom: 16px;
-  color: #1e40af;
+  color: #2a5b82;
   font-size: 0.95rem;
 }
 
