@@ -31,6 +31,53 @@ function initApp() {
   loadBooksFromStorage();
   setupEventListeners();
   renderApp();
+  initCursorGlow();
+}
+
+// 滑鼠游標燈光效果（科技感光暈，僅在滑鼠/觸控板裝置上啟用）
+function initCursorGlow() {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+  if (prefersReducedMotion || !hasFinePointer) return;
+
+  const glow = document.createElement('div');
+  glow.className = 'cursor-glow';
+  document.body.appendChild(glow);
+
+  let targetX = window.innerWidth / 2;
+  let targetY = window.innerHeight / 2;
+  let currentX = targetX;
+  let currentY = targetY;
+
+  document.addEventListener('mousemove', (e) => {
+    targetX = e.clientX;
+    targetY = e.clientY;
+    glow.classList.add('is-active');
+  });
+
+  document.addEventListener('mouseleave', () => {
+    glow.classList.remove('is-active');
+  });
+
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest('.btn, .book-card, .stat-card')) {
+      glow.classList.add('is-hover');
+    }
+  });
+
+  document.addEventListener('mouseout', (e) => {
+    if (e.target.closest('.btn, .book-card, .stat-card')) {
+      glow.classList.remove('is-hover');
+    }
+  });
+
+  function animate() {
+    currentX += (targetX - currentX) * 0.15;
+    currentY += (targetY - currentY) * 0.15;
+    glow.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
 }
 
 // 從 LocalStorage 載入資料
