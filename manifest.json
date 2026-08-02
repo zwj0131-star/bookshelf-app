@@ -3,7 +3,7 @@
   "short_name": "個人書櫃",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#fbe9ef",
+  "background_color": "#ffe0ee",
   "theme_color": "#5b9bd9",
   "icons": [
     {
