@@ -65,7 +65,7 @@ function initBootScreen() {
       hint.textContent = '密碼錯誤，請再試一次';
       bootScreen.classList.add('shake');
       input.value = '';
-      setTimeout(() => bootScreen.classList.remove('shake'), 400);
+      setTimeout(() => bootScreen.classList.remove('shake'), 900);
     }
   }
 

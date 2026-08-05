@@ -26,6 +26,7 @@
     <div class="bronze-door door-left"></div>
     <div class="bronze-door door-right"></div>
     <div class="boot-seam"></div>
+    <div class="boot-rosette"></div>
     <div class="boot-mechanism">
       <div class="mech-ring mech-outer"></div>
       <div class="mech-ring mech-mid"></div>
@@ -40,6 +41,31 @@
       <button type="submit" class="boot-password-submit"><i class="fa-solid fa-unlock"></i></button>
     </form>
     <div class="boot-hint" id="boot-hint">輸入密碼・開啟書櫃</div>
+
+    <!-- 密碼輸入錯誤時跳出的鬼差 -->
+    <div class="ghost-guard" id="ghost-guard" aria-hidden="true">
+      <svg viewBox="0 0 200 260" width="180" height="234" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="100" cy="248" rx="70" ry="10" fill="#000" opacity="0.35"/>
+        <!-- 長袍 -->
+        <path d="M100 96 C60 96 34 150 26 240 L174 240 C166 150 140 96 100 96 Z" fill="#0b0b0d"/>
+        <path d="M100 96 C72 130 66 190 70 240 L130 240 C134 190 128 130 100 96 Z" fill="#1c1c20"/>
+        <!-- 高帽 -->
+        <rect x="70" y="10" width="60" height="92" rx="4" fill="#0b0b0d"/>
+        <rect x="62" y="94" width="76" height="14" rx="3" fill="#0b0b0d"/>
+        <rect x="80" y="34" width="40" height="52" fill="#c0392b" opacity="0.85"/>
+        <text x="100" y="66" font-size="22" font-family="'Songti TC','Noto Serif TC',serif" fill="#f3e6c8" text-anchor="middle">勾</text>
+        <!-- 臉 -->
+        <ellipse cx="100" cy="122" rx="30" ry="34" fill="#eae3d3"/>
+        <path d="M74 108 Q100 96 126 108" stroke="#0b0b0d" stroke-width="3" fill="none"/>
+        <circle cx="86" cy="120" r="6" fill="#ff3b3b"/>
+        <circle cx="114" cy="120" r="6" fill="#ff3b3b"/>
+        <path d="M84 142 Q100 152 116 142" stroke="#3a1010" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- 手持鎖鏈 -->
+        <circle cx="40" cy="188" r="5" fill="none" stroke="#d7c98a" stroke-width="3"/>
+        <circle cx="34" cy="204" r="5" fill="none" stroke="#d7c98a" stroke-width="3"/>
+        <circle cx="40" cy="220" r="5" fill="none" stroke="#d7c98a" stroke-width="3"/>
+      </svg>
+    </div>
   </div>
 
   <!-- 主容器 -->
