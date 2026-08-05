@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="個人書櫃">
-  <meta name="theme-color" content="#0a0f18">
+  <meta name="theme-color" content="#6c5ce7">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="icon" href="apple-touch-icon.png">
@@ -20,6 +20,28 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- 開機畫面：青銅門 -->
+  <div id="boot-screen" class="boot-screen" role="button" tabindex="0" aria-label="輕觸畫面，開啟青銅門進入書櫃">
+    <div class="boot-mist"></div>
+    <div class="bronze-door door-left"></div>
+    <div class="bronze-door door-right"></div>
+    <div class="boot-seam"></div>
+    <div class="boot-mechanism">
+      <div class="mech-ring mech-outer"></div>
+      <div class="mech-ring mech-mid"></div>
+      <div class="mech-hub"></div>
+    </div>
+    <div class="boot-title">
+      <span class="boot-title-cn">青銅門</span>
+      <span class="boot-credit">詹汶瑾 出品</span>
+    </div>
+    <form id="boot-password-form" class="boot-password-form" autocomplete="off">
+      <input type="password" inputmode="numeric" id="boot-password-input" class="boot-password-input" placeholder="請輸入密碼" aria-label="密碼">
+      <button type="submit" class="boot-password-submit"><i class="fa-solid fa-unlock"></i></button>
+    </form>
+    <div class="boot-hint" id="boot-hint">輸入密碼・開啟書櫃</div>
+  </div>
+
   <!-- 主容器 -->
   <div class="app-container">
     <!-- 頂部頁眉 -->
@@ -112,6 +134,8 @@
         <p>點擊右上角「新增藏書」開始建立您的專屬書櫃吧！</p>
       </div>
     </main>
+
+    <footer class="app-footer">個人書櫃與借閱統計小助手 · 創作者 詹汶瑾</footer>
   </div>
 
   <!-- 彈出視窗 1：新增 / 編輯書籍 -->

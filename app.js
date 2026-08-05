@@ -28,56 +28,59 @@ const sortBy = document.getElementById('sort-by');
 
 // 初始化應用程式
 function initApp() {
+  initBootScreen();
   loadBooksFromStorage();
   setupEventListeners();
   renderApp();
-  initCursorGlow();
 }
 
-// 滑鼠游標燈光效果（科技感光暈，僅在滑鼠/觸控板裝置上啟用）
-function initCursorGlow() {
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
-  if (prefersReducedMotion || !hasFinePointer) return;
+// 開機畫面：需輸入密碼才能開啟青銅門
+// 注意：這只是純前端的簡單門鎖，防君子不防懂技術的人
+const BOOT_PASSWORD = '520945';
 
-  const glow = document.createElement('div');
-  glow.className = 'cursor-glow';
-  document.body.appendChild(glow);
+function initBootScreen() {
+  const bootScreen = document.getElementById('boot-screen');
+  if (!bootScreen) return;
 
-  let targetX = window.innerWidth / 2;
-  let targetY = window.innerHeight / 2;
-  let currentX = targetX;
-  let currentY = targetY;
+  const form = document.getElementById('boot-password-form');
+  const input = document.getElementById('boot-password-input');
+  const hint = document.getElementById('boot-hint');
 
-  document.addEventListener('mousemove', (e) => {
-    targetX = e.clientX;
-    targetY = e.clientY;
-    glow.classList.add('is-active');
-  });
+  let opened = false;
 
-  document.addEventListener('mouseleave', () => {
-    glow.classList.remove('is-active');
-  });
-
-  document.addEventListener('mouseover', (e) => {
-    if (e.target.closest('.btn, .book-card, .stat-card')) {
-      glow.classList.add('is-hover');
-    }
-  });
-
-  document.addEventListener('mouseout', (e) => {
-    if (e.target.closest('.btn, .book-card, .stat-card')) {
-      glow.classList.remove('is-hover');
-    }
-  });
-
-  function animate() {
-    currentX += (targetX - currentX) * 0.15;
-    currentY += (targetY - currentY) * 0.15;
-    glow.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
-    requestAnimationFrame(animate);
+  function openDoor() {
+    if (opened) return;
+    opened = true;
+    bootScreen.classList.add('opening');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setTimeout(() => {
+      bootScreen.style.display = 'none';
+    }, prefersReducedMotion ? 450 : 1300);
   }
-  requestAnimationFrame(animate);
+
+  function checkPassword() {
+    if (input.value === BOOT_PASSWORD) {
+      openDoor();
+    } else {
+      hint.textContent = '密碼錯誤，請再試一次';
+      bootScreen.classList.add('shake');
+      input.value = '';
+      setTimeout(() => bootScreen.classList.remove('shake'), 400);
+    }
+  }
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      checkPassword();
+    });
+  }
+
+  // 開機畫面點擊聚焦到輸入框，方便直接打字
+  bootScreen.addEventListener('click', (e) => {
+    if (e.target === input || e.target.closest('.boot-password-form')) return;
+    input.focus();
+  });
 }
 
 // 從 LocalStorage 載入資料
