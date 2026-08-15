@@ -1,36 +1,43 @@
-/* 核心設計系統與 Token 定義 */
+/* 核心設計系統與 Token 定義 - 古老青銅・翡翠秘閣主題 */
 :root {
-  --bg-main: #ffb199;
-  --bg-main-2: #a084dc;
-  --bg-card: #ffffff;
-  --bg-sidebar: #0f172a;
-  --primary-color: #6c5ce7;
-  --primary-hover: #5849c4;
-  --primary-light: #edebff;
-  --secondary-color: #636e72;
-  --secondary-hover: #485056;
-  --accent-color: #ff7675;
-  --accent-light: #ffeceb;
-  --success-color: #00b894;
-  --success-light: #e3faf3;
-  --warning-color: #fdae4b;
-  --warning-light: #fff3e0;
-  --danger-color: #ff5c7a;
-  --danger-light: #ffe9ee;
+  --bg-main: #09120f;
+  --bg-main-2: #14241f;
+  --bg-card: rgba(18, 33, 27, 0.9);
+  --bg-card-hover: rgba(26, 46, 38, 0.95);
+  --bg-sidebar: #060d0b;
+  
+  --primary-color: #3dfacb;
+  --primary-hover: #2fd8ad;
+  --primary-light: rgba(61, 250, 203, 0.14);
+  
+  --secondary-color: #8ea89c;
+  --secondary-hover: #abc5b9;
+  
+  --accent-color: #d4af37;
+  --accent-hover: #f1ca4f;
+  --accent-light: rgba(212, 175, 55, 0.16);
+  
+  --success-color: #3dfacb;
+  --success-light: rgba(61, 250, 203, 0.15);
+  --warning-color: #e5a742;
+  --warning-light: rgba(229, 167, 66, 0.16);
+  --danger-color: #ff5252;
+  --danger-light: rgba(255, 82, 82, 0.16);
 
-  --text-main: #2d3436;
-  --text-muted: #767f92;
-  --text-light: #b2bec3;
+  --text-main: #f0f7f4;
+  --text-muted: #9bb7ac;
+  --text-light: #648175;
 
-  --border-color: #eef0f5;
+  --border-color: rgba(61, 250, 203, 0.2);
+  --border-gold: rgba(212, 175, 55, 0.45);
   --border-radius-sm: 12px;
   --border-radius-md: 18px;
-  --border-radius-lg: 28px;
+  --border-radius-lg: 24px;
   --border-radius-pill: 999px;
 
-  --shadow-sm: 0 2px 8px rgba(108, 92, 231, 0.08);
-  --shadow-md: 0 8px 20px rgba(108, 92, 231, 0.12);
-  --shadow-lg: 0 16px 36px rgba(108, 92, 231, 0.18);
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.6), 0 0 18px rgba(61, 250, 203, 0.08);
+  --shadow-lg: 0 18px 45px rgba(0, 0, 0, 0.75), 0 0 30px rgba(212, 175, 55, 0.18);
 
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -472,16 +479,9 @@
   40%, 60% { transform: translate3d(14px, -10px, 0) rotate(2.5deg); }
 }
 
-.app-footer {
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  padding: 28px 0 4px;
-}
-
 body {
-  font-family: 'Noto Sans TC', 'Outfit', system-ui, -apple-system, sans-serif;
-  background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-main-2) 100%) fixed;
+  font-family: 'Noto Serif TC', 'Outfit', system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at 50% 20%, var(--bg-main-2) 0%, var(--bg-main) 100%) fixed;
   color: var(--text-main);
   line-height: 1.6;
   padding: calc(24px + env(safe-area-inset-top, 0px)) calc(24px + env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) calc(24px + env(safe-area-inset-left, 0px));
@@ -495,17 +495,30 @@ body {
   margin: 0 auto;
 }
 
-/* 頂部 Header */
+/* 頂部 Header - 古老秘殿風格 */
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: var(--bg-card);
+  backdrop-filter: blur(16px);
   padding: 24px 32px;
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-md);
   margin-bottom: 24px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border-gold);
+  position: relative;
+  overflow: hidden;
+}
+
+.app-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-color), var(--primary-color), transparent);
 }
 
 .header-brand {
@@ -517,25 +530,28 @@ body {
 .brand-icon {
   width: 52px;
   height: 52px;
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-  color: #fff;
+  background: linear-gradient(135deg, #1b3830, #2c584a);
+  color: var(--accent-color);
+  border: 1.5px solid var(--accent-color);
   border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  box-shadow: 0 6px 16px rgba(108, 92, 231, 0.35);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5), 0 0 15px rgba(212, 175, 55, 0.35);
 }
 
 .header-brand h1 {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-main);
+  color: #fff9e6;
+  letter-spacing: 1px;
 }
 
 .subtitle {
   font-size: 0.875rem;
   color: var(--text-muted);
+  letter-spacing: 0.5px;
 }
 
 .header-actions {
@@ -543,7 +559,7 @@ body {
   gap: 12px;
 }
 
-/* 按鈕樣式 */
+/* 按鈕樣式 - 古銅鎏金與青玉 */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -552,38 +568,46 @@ body {
   font-size: 0.95rem;
   font-weight: 600;
   border-radius: var(--border-radius-pill);
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
+  font-family: inherit;
   transition: var(--transition);
 }
 
 .btn-primary {
-  background-color: var(--primary-color);
-  color: white;
+  background: linear-gradient(135deg, #1f3d35, #295447);
+  color: #e6fcf5;
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 .btn-primary:hover {
-  background-color: var(--primary-hover);
-  box-shadow: 0 6px 16px rgba(108, 92, 231, 0.35);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #2b5449, #366d5d);
+  color: #fff;
+  box-shadow: 0 0 18px rgba(61, 250, 203, 0.5);
+  transform: translateY(-2px);
 }
 
 .btn-secondary {
-  background-color: #f4f3ff;
-  color: var(--text-main);
+  background: rgba(14, 26, 21, 0.85);
+  color: #d2e4dc;
   border: 1px solid var(--border-color);
 }
 .btn-secondary:hover {
-  background-color: #ece9ff;
+  background: rgba(22, 42, 34, 0.95);
+  color: #fff;
+  border-color: var(--primary-color);
 }
 
 .btn-accent {
-  background-color: var(--accent-color);
-  color: white;
+  background: linear-gradient(135deg, #d4af37, #aa821e);
+  color: #0b1512;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
 }
 .btn-accent:hover {
-  background-color: #ff5c5b;
-  box-shadow: 0 6px 16px rgba(255, 118, 117, 0.35);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #ecd35b, #c59b27);
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+  transform: translateY(-2px);
 }
 
 .btn-outline-danger {
@@ -593,6 +617,7 @@ body {
 }
 .btn-outline-danger:hover {
   background-color: var(--danger-light);
+  color: #ff9999;
 }
 
 .btn-block {
@@ -610,6 +635,7 @@ body {
 
 .stat-card {
   background: var(--bg-card);
+  backdrop-filter: blur(12px);
   border-radius: var(--border-radius-md);
   padding: 20px;
   display: flex;
@@ -621,7 +647,8 @@ body {
 }
 
 .stat-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
+  border-color: var(--primary-color);
   box-shadow: var(--shadow-md);
 }
 
@@ -633,12 +660,13 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.stat-card.blue .stat-icon { background: var(--primary-light); color: var(--primary-color); }
-.stat-card.green .stat-icon { background: var(--success-light); color: var(--success-color); }
-.stat-card.orange .stat-icon { background: var(--warning-light); color: var(--warning-color); }
-.stat-card.purple .stat-icon { background: var(--accent-light); color: var(--accent-color); }
+.stat-card.blue .stat-icon { background: var(--primary-light); color: var(--primary-color); border-color: rgba(61, 250, 203, 0.3); }
+.stat-card.green .stat-icon { background: rgba(0, 230, 150, 0.15); color: #00e696; border-color: rgba(0, 230, 150, 0.3); }
+.stat-card.orange .stat-icon { background: var(--warning-light); color: var(--warning-color); border-color: rgba(229, 167, 66, 0.3); }
+.stat-card.purple .stat-icon { background: var(--accent-light); color: var(--accent-color); border-color: rgba(212, 175, 55, 0.3); }
 
 .stat-info {
   display: flex;
@@ -651,9 +679,9 @@ body {
 }
 
 .stat-value {
-  font-size: 1.75rem;
+  font-size: 1.85rem;
   font-weight: 700;
-  color: var(--text-main);
+  color: #fff;
   line-height: 1.2;
 }
 
@@ -662,8 +690,10 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
   gap: 16px;
   background: var(--bg-card);
+  backdrop-filter: blur(12px);
   padding: 16px 24px;
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-sm);
@@ -691,13 +721,15 @@ body {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-pill);
   font-size: 0.95rem;
+  color: var(--text-main);
+  background-color: rgba(10, 20, 16, 0.8);
   outline: none;
   transition: var(--transition);
 }
 
 .search-bar input:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+  box-shadow: 0 0 12px rgba(61, 250, 203, 0.3);
 }
 
 .filter-group {
@@ -710,7 +742,7 @@ body {
   padding: 10px 16px;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-pill);
-  background-color: var(--bg-card);
+  background-color: rgba(10, 20, 16, 0.8);
   font-size: 0.9rem;
   color: var(--text-main);
   outline: none;
@@ -720,6 +752,7 @@ body {
 
 .filter-group select:focus {
   border-color: var(--primary-color);
+  box-shadow: 0 0 12px rgba(61, 250, 203, 0.3);
 }
 
 /* 書籍列表卡片牆 */
@@ -731,6 +764,7 @@ body {
 
 .book-card {
   background: var(--bg-card);
+  backdrop-filter: blur(12px);
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
@@ -743,17 +777,19 @@ body {
 
 .book-card:hover {
   transform: translateY(-6px);
+  border-color: var(--border-gold);
   box-shadow: var(--shadow-lg);
 }
 
 .book-cover-wrap {
   height: 200px;
-  background: linear-gradient(135deg, var(--primary-light), var(--accent-light));
+  background: linear-gradient(135deg, #152720, #0c1713);
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .book-cover-img {
@@ -764,7 +800,7 @@ body {
 }
 
 .book-card:hover .book-cover-img {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
 .book-status-badge {
@@ -779,13 +815,15 @@ body {
 }
 
 .badge-available {
-  background: rgba(0, 184, 148, 0.92);
-  color: white;
+  background: rgba(61, 250, 203, 0.9);
+  color: #0b1512;
+  box-shadow: 0 0 10px rgba(61, 250, 203, 0.4);
 }
 
 .badge-borrowed {
-  background: rgba(253, 174, 75, 0.92);
-  color: white;
+  background: rgba(229, 167, 66, 0.9);
+  color: #0b1512;
+  box-shadow: 0 0 10px rgba(229, 167, 66, 0.4);
 }
 
 .book-card-body {
@@ -801,15 +839,15 @@ body {
   text-transform: uppercase;
   color: var(--accent-color);
   margin-bottom: 4px;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
 }
 
 .book-title {
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--text-main);
+  color: #fff;
   margin-bottom: 6px;
-  line-height: 1.3;
+  line-height: 1.35;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -823,9 +861,10 @@ body {
 }
 
 .book-rating-stars {
-  color: #ffc048;
+  color: #ffd15c;
   font-size: 0.85rem;
   margin-bottom: 12px;
+  text-shadow: 0 0 6px rgba(255, 209, 92, 0.4);
 }
 
 .book-summary-preview {
@@ -842,12 +881,12 @@ body {
 
 .borrow-info-tag {
   background: var(--warning-light);
-  color: #c67c1e;
+  color: #f7c779;
   padding: 8px 12px;
   border-radius: var(--border-radius-sm);
   font-size: 0.8rem;
   margin-bottom: 16px;
-  border: 1px dashed #fbd48a;
+  border: 1px dashed rgba(229, 167, 66, 0.4);
 }
 
 .book-card-footer {
@@ -881,7 +920,7 @@ body {
 
 .empty-state h3 {
   font-size: 1.25rem;
-  color: var(--text-main);
+  color: #fff;
   margin-bottom: 8px;
 }
 
@@ -890,7 +929,7 @@ body {
   font-size: 0.95rem;
 }
 
-/* Modal 彈出視窗通用的基礎與動畫 */
+/* Modal 彈出視窗 - 玄青古玉玻璃質感 */
 .modal {
   position: fixed;
   top: 0;
@@ -920,19 +959,20 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(45, 52, 54, 0.55);
-  backdrop-filter: blur(4px);
+  background: rgba(5, 12, 10, 0.75);
+  backdrop-filter: blur(8px);
 }
 
 .modal-content {
   position: relative;
-  background: var(--bg-card);
+  background: radial-gradient(circle at 50% 10%, #172a23 0%, #0c1713 100%);
   width: 90%;
   max-width: 540px;
   max-height: 90vh;
   overflow-y: auto;
   border-radius: var(--border-radius-lg);
-  box-shadow: 0 20px 40px -8px rgba(45, 52, 54, 0.3);
+  border: 1.5px solid var(--border-gold);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.2);
   padding: 28px;
   z-index: 1001;
   animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -964,7 +1004,7 @@ body {
 
 .modal-header h2 {
   font-size: 1.25rem;
-  color: var(--text-main);
+  color: #fff9e6;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -980,7 +1020,7 @@ body {
 }
 
 .btn-close:hover {
-  color: var(--text-main);
+  color: var(--primary-color);
 }
 
 /* 表單元件 */
@@ -1000,7 +1040,7 @@ label {
   display: block;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-main);
+  color: #dcece4;
   margin-bottom: 6px;
 }
 
@@ -1020,7 +1060,7 @@ textarea {
   border-radius: var(--border-radius-sm);
   font-size: 0.95rem;
   color: var(--text-main);
-  background-color: var(--bg-card);
+  background-color: rgba(10, 20, 16, 0.85);
   outline: none;
   font-family: inherit;
   transition: var(--transition);
@@ -1038,7 +1078,7 @@ textarea {
 
 input:focus, select:focus, textarea:focus {
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+  box-shadow: 0 0 12px rgba(61, 250, 203, 0.3);
 }
 
 .modal-footer {
@@ -1067,6 +1107,7 @@ input:focus, select:focus, textarea:focus {
   width: 100%;
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
   object-fit: cover;
   max-height: 280px;
 }
@@ -1088,11 +1129,13 @@ input:focus, select:focus, textarea:focus {
 .badge-cat {
   background: var(--accent-light);
   color: var(--accent-color);
+  border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
 .detail-info h3 {
   font-size: 1.4rem;
   font-weight: 700;
+  color: #fff;
   margin-bottom: 6px;
 }
 
@@ -1103,28 +1146,28 @@ input:focus, select:focus, textarea:focus {
 }
 
 .detail-rating {
-  color: #ffc048;
+  color: #ffd15c;
   font-size: 1rem;
   margin-bottom: 16px;
 }
 
 .detail-borrow-box {
   background: var(--warning-light);
-  border: 1px solid #fbd48a;
+  border: 1px solid rgba(229, 167, 66, 0.4);
   border-radius: var(--border-radius-sm);
   padding: 12px 16px;
   margin-bottom: 16px;
   font-size: 0.9rem;
-  color: #c67c1e;
+  color: #f7c779;
 }
 
 .summary-text {
-  background: #f7f7fb;
+  background: rgba(10, 20, 16, 0.8);
   padding: 16px;
   border-radius: var(--border-radius-sm);
   white-space: pre-wrap;
   font-size: 0.95rem;
-  color: #45505a;
+  color: #dcece4;
   line-height: 1.7;
   max-height: 240px;
   overflow-y: auto;
@@ -1139,6 +1182,7 @@ input:focus, select:focus, textarea:focus {
   margin-bottom: 16px;
   color: var(--primary-color);
   font-size: 0.95rem;
+  border: 1px solid rgba(61, 250, 203, 0.2);
 }
 
 .divider {
@@ -1157,6 +1201,13 @@ input:focus, select:focus, textarea:focus {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.app-footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  padding: 28px 0 4px;
 }
 
 /* 響應式調整 */
