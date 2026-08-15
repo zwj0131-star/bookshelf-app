@@ -579,13 +579,62 @@
     <button class="btn-action reset" onclick="resetGate()">
       <span>🔄</span> 重置大門
     </button>
+    <div class="audio-toggle" id="musicToggleBtn" onclick="toggleBgmMusic()" style="margin-left: 8px;">
+      <span id="musicIcon">🎵</span>
+      <span id="musicText">《青銅密語》: 播放中</span>
+    </div>
     <div class="audio-toggle" onclick="toggleAudio()">
       <span id="audioIcon">🔊</span>
       <span id="audioText">音效已啟用</span>
     </div>
   </div>
 
+  <!-- 背景音樂音檔 -->
+  <audio id="bgmAudio" src="assets/bronze_whisper.mp3" loop preload="auto"></audio>
+
   <script>
+    let bgmMusicPlaying = false;
+    function playBgmMusic() {
+      const audio = document.getElementById('bgmAudio');
+      if (audio) {
+        audio.volume = 0.65;
+        audio.play().then(() => {
+          bgmMusicPlaying = true;
+          updateBgmMusicUI(true);
+        }).catch(e => console.log('BGM Auto play waiting for user click'));
+      }
+    }
+
+    function toggleBgmMusic() {
+      const audio = document.getElementById('bgmAudio');
+      if (!audio) return;
+      if (bgmMusicPlaying) {
+        audio.pause();
+        bgmMusicPlaying = false;
+        updateBgmMusicUI(false);
+      } else {
+        audio.play();
+        bgmMusicPlaying = true;
+        updateBgmMusicUI(true);
+      }
+    }
+
+    function updateBgmMusicUI(playing) {
+      const icon = document.getElementById('musicIcon');
+      const text = document.getElementById('musicText');
+      if (icon && text) {
+        icon.textContent = playing ? '🎵' : '🔇';
+        text.textContent = playing ? '《青銅密語》: 播放中' : '《青銅密語》: 已暫停';
+      }
+    }
+
+    document.addEventListener('click', () => {
+      if (!bgmMusicPlaying) playBgmMusic();
+    }, { once: true });
+    document.addEventListener('keydown', () => {
+      if (!bgmMusicPlaying) playBgmMusic();
+    }, { once: true });
+
     // --- Web Audio 逼真音效合成引擎 (無須外部音檔) ---
     let audioCtx = null;
     let audioEnabled = true;

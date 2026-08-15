@@ -35,6 +35,162 @@ function initApp() {
 }
 
 // ==========================================================================
+// 🎵 專屬神曲《青銅密語》音訊播放與動態歌詞引擎
+// ==========================================================================
+let isMusicPlaying = false;
+let lyricsTimer = null;
+let currentLyricIdx = 0;
+
+// 古風歌曲《青銅密語》專屬動態歌詞庫
+const ANCIENT_LYRICS = [
+  { main: "「一曲嗩吶破黃泉，千年青銅鎖萬仙」", sub: "冥霧漫漫 · 玄門未開 · 靜待有緣" },
+  { main: "「饕餮暗鎖符文動，敢問君子何處來」", sub: "敲擊密碼 · 符文共鳴 · 引動乾坤" },
+  { main: "「若逢密碼心不對，厲鬼破門現形骸」", sub: "幽冥煞氣 · 萬鬼呼嘯 · 莫闖玄關" },
+  { main: "「神光乍現青銅展，萬卷藏書入懷來」", sub: "金石為開 · 迎光入殿 · 藏書大啟" },
+  { main: "「借閱乾坤自成竹，讀書何必待明朝」", sub: "自主學習 · 書香漫卷 · 筆墨通神" }
+];
+
+function getBgmAudio() {
+  return document.getElementById('bgm-audio');
+}
+
+// 動態歌詞滾動更新
+function cycleLyrics() {
+  if (!isMusicPlaying) return;
+
+  const mainEl = document.getElementById('lyrics-main');
+  const subEl = document.getElementById('lyrics-sub');
+
+  if (mainEl && subEl) {
+    const item = ANCIENT_LYRICS[currentLyricIdx];
+    mainEl.style.opacity = '0';
+    mainEl.style.transform = 'scale(0.9)';
+
+    setTimeout(() => {
+      mainEl.textContent = item.main;
+      subEl.textContent = item.sub;
+      mainEl.style.opacity = '1';
+      mainEl.style.transform = 'scale(1.03)';
+    }, 250);
+
+    currentLyricIdx = (currentLyricIdx + 1) % ANCIENT_LYRICS.length;
+  }
+
+  lyricsTimer = setTimeout(cycleLyrics, 5000);
+}
+
+function startMusicPlayback() {
+  const audio = getBgmAudio();
+  isMusicPlaying = true;
+
+  if (audio) {
+    audio.volume = 0.65;
+    audio.play().then(() => {
+      updateMusicBtnUI(true);
+    }).catch(err => {
+      console.warn('MP3 自動播放需使用者互動:', err);
+      updateMusicBtnUI(false);
+    });
+  }
+
+  cycleLyrics();
+  updateMusicBtnUI(true);
+}
+
+function stopMusicPlayback() {
+  const audio = getBgmAudio();
+  isMusicPlaying = false;
+
+  if (audio) {
+    audio.pause();
+  }
+  clearTimeout(lyricsTimer);
+  updateMusicBtnUI(false);
+}
+
+window.toggleMusicPlayback = function() {
+  if (isMusicPlaying) {
+    stopMusicPlayback();
+  } else {
+    startMusicPlayback();
+  }
+};
+
+// 保持與舊介面相容
+window.toggleSuonaBGM = window.toggleMusicPlayback;
+window.toggleAncientBGM = window.toggleMusicPlayback;
+
+function updateMusicBtnUI(playing) {
+  const bootIcon = document.getElementById('boot-suona-icon');
+  const bootText = document.getElementById('boot-suona-text');
+  const headerText = document.getElementById('header-suona-text');
+  const btnSuona = document.getElementById('btn-suona-toggle');
+  const lyricsContainer = document.getElementById('suona-lyrics-container');
+
+  const text = playing ? '青銅密語: 播放中' : '青銅密語: 已暫停';
+  if (bootText) bootText.textContent = text;
+  if (headerText) headerText.textContent = playing ? '青銅密語' : '音樂已暫停';
+
+  if (bootIcon) {
+    bootIcon.textContent = playing ? '🎵' : '🔇';
+  }
+  if (btnSuona) {
+    btnSuona.style.borderColor = playing ? 'var(--accent-color)' : 'var(--border-color)';
+    btnSuona.style.color = playing ? 'var(--accent-color)' : 'var(--text-muted)';
+  }
+  if (lyricsContainer) {
+    lyricsContainer.style.opacity = playing ? '1' : '0.35';
+  }
+}
+
+// 首次使用者點擊/按鍵時自動啟動《青銅密語》
+let firstUserInteraction = false;
+function handleFirstUserMusicStart() {
+  if (firstUserInteraction) return;
+  firstUserInteraction = true;
+  if (!isMusicPlaying) {
+    startMusicPlayback();
+  }
+}
+document.addEventListener('click', handleFirstUserMusicStart, { once: true });
+document.addEventListener('keydown', handleFirstUserMusicStart, { once: true });
+
+function updateSuonaBtnUI(playing) {
+  const bootIcon = document.getElementById('boot-suona-icon');
+  const bootText = document.getElementById('boot-suona-text');
+  const headerText = document.getElementById('header-suona-text');
+  const btnSuona = document.getElementById('btn-suona-toggle');
+  const lyricsContainer = document.getElementById('suona-lyrics-container');
+
+  const text = playing ? '嗩吶神曲: 演奏中' : '嗩吶神曲: 已靜音';
+  if (bootText) bootText.textContent = text;
+  if (headerText) headerText.textContent = playing ? '嗩吶神曲伴奏' : '嗩吶已靜音';
+
+  if (bootIcon) {
+    bootIcon.textContent = playing ? '🎺' : '🔇';
+  }
+  if (btnSuona) {
+    btnSuona.style.borderColor = playing ? 'var(--accent-color)' : 'var(--border-color)';
+    btnSuona.style.color = playing ? 'var(--accent-color)' : 'var(--text-muted)';
+  }
+  if (lyricsContainer) {
+    lyricsContainer.style.opacity = playing ? '1' : '0.4';
+  }
+}
+
+// 首次使用者點擊/按鍵時自動啟動嗩吶古風神曲
+let firstUserInteraction = false;
+function handleFirstUserMusicStart() {
+  if (firstUserInteraction) return;
+  firstUserInteraction = true;
+  if (!isSuonaPlaying) {
+    startSuonaBGM();
+  }
+}
+document.addEventListener('click', handleFirstUserMusicStart, { once: true });
+document.addEventListener('keydown', handleFirstUserMusicStart, { once: true });
+
+// ==========================================================================
 // 3D 古老青銅門機關與厲鬼破門 (Boot Screen Module)
 // ==========================================================================
 const VALID_BOOT_PASSWORDS = ['520945', '8888'];

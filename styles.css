@@ -94,12 +94,17 @@
   text-align: center;
 }
 
-/* 音效控制開關 (右上角) */
-.boot-audio-toggle {
+/* 右上角控制開關群組 (音樂與音效) */
+.boot-controls-top {
   position: absolute;
   top: 25px;
   right: 25px;
   z-index: 70;
+  display: flex;
+  gap: 12px;
+}
+
+.boot-audio-toggle {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -118,6 +123,58 @@
   border-color: #3dfacb;
   color: #3dfacb;
   box-shadow: 0 0 12px rgba(61, 250, 203, 0.4);
+}
+
+/* 古風嗩吶動態歌詞字幕區 (置底居中) */
+.suona-lyrics-container {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: rgba(8, 16, 13, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1.5px solid var(--border-gold);
+  border-radius: 20px;
+  padding: 10px 28px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.25);
+  max-width: 90vw;
+  text-align: center;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.lyrics-tag {
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  color: #3dfacb;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(61, 250, 203, 0.6);
+}
+
+.lyrics-main {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #fff8db;
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.8), 0 0 20px #d4af37;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  animation: lyricsGlow 2.5s infinite alternate;
+}
+
+.lyrics-sub {
+  font-size: 0.85rem;
+  color: #9bb7ac;
+  letter-spacing: 1.5px;
+}
+
+@keyframes lyricsGlow {
+  0% { transform: scale(0.98); opacity: 0.85; }
+  100% { transform: scale(1.02); opacity: 1; text-shadow: 0 0 15px #ffd700, 0 0 25px #ff4500; }
 }
 
 /* 幽冥煞氣裂隙光 (門縫透出的綠紅邪光) */

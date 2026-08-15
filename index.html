@@ -78,10 +78,26 @@
     <!-- 血紅閃爍遮罩 -->
     <div id="blood-overlay" class="blood-overlay"></div>
 
-    <!-- 音效切換開關 (右上角) -->
-    <div class="boot-audio-toggle" id="boot-audio-btn" onclick="window.toggleBootAudio()">
-      <span id="boot-audio-icon"><i class="fa-solid fa-volume-high"></i></span>
-      <span id="boot-audio-text">音效已啟用</span>
+    <!-- 古風歌曲《青銅密語》動態歌詞字幕 (置底) -->
+    <div class="suona-lyrics-container" id="suona-lyrics-container">
+      <div class="lyrics-tag">🎵 專屬神曲 ·《青銅密語》</div>
+      <div class="lyrics-main" id="lyrics-main">「一曲嗩吶破黃泉，千年青銅鎖萬仙」</div>
+      <div class="lyrics-sub" id="lyrics-sub">密碼若錯厲鬼出，金鎖若解萬卷舒</div>
+    </div>
+
+    <!-- 背景音樂 Audio 標籤 (優先載入真實 MP3 音檔) -->
+    <audio id="bgm-audio" src="assets/bronze_whisper.mp3" loop preload="auto"></audio>
+
+    <!-- 音樂與音效控制開關 (右上角) -->
+    <div class="boot-controls-top">
+      <div class="boot-audio-toggle" id="boot-suona-btn" onclick="window.toggleMusicPlayback()">
+        <span id="boot-suona-icon">🎵</span>
+        <span id="boot-suona-text">青銅密語: 播放中</span>
+      </div>
+      <div class="boot-audio-toggle" id="boot-audio-btn" onclick="window.toggleBootAudio()">
+        <span id="boot-audio-icon"><i class="fa-solid fa-volume-high"></i></span>
+        <span id="boot-audio-text">音效已啟用</span>
+      </div>
     </div>
   </div>
 
@@ -99,6 +115,9 @@
         </div>
       </div>
       <div class="header-actions">
+        <button id="btn-suona-toggle" class="btn btn-secondary" onclick="window.toggleMusicPlayback()" title="播放/暫停 《青銅密語》背景音樂">
+          <span>🎵</span> <span id="header-suona-text">青銅密語</span>
+        </button>
         <button id="btn-add-book" class="btn btn-primary">
           <i class="fa-solid fa-plus"></i> 新增藏書
         </button>
