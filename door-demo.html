@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>古老青銅門機關 - 開門與厲鬼破門突襲 Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold-primary: #d4af37;
+      --gold-glow: rgba(212, 175, 55, 0.6);
+      --bronze-dark: #0f1c18;
+      --rune-cyan: #3dfacb;
+      --blood-red: #ff1e27;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: #050807;
+      color: #e0e0e0;
+      font-family: 'Noto Serif TC', 'Cinzel', serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* 3D 舞台場景 */
+    .scene-viewport {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      perspective: 1200px;
+      perspective-origin: center center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #152422 0%, #060b0a 70%, #000 100%);
+    }
+
+    /* 門後神秘殿堂/光芒背景 (開門後展現) */
+    .sanctum-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(ellipse at center, #ffeaa7 0%, #d4af37 25%, #1a1a1a 70%, #000 100%);
+      z-index: 1;
+      opacity: 0;
+      transform: scale(0.9);
+      transition: opacity 1.5s ease, transform 2s ease;
+    }
+
+    .sanctum-background.revealed {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .sanctum-content {
+      text-align: center;
+      color: #fff;
+      text-shadow: 0 0 20px rgba(0,0,0,0.8), 0 0 40px #d4af37;
+    }
+
+    .sanctum-title {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: 6px;
+      margin-bottom: 12px;
+      color: #fff8db;
+    }
+
+    .sanctum-desc {
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      color: #f7e1a0;
+    }
+
+    /* 幽冥煞氣裂隙光 (門縫透出的綠紅邪光) */
+    .underworld-rift {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, #00ff88 0%, #ff1e27 40%, transparent 75%);
+      opacity: 0;
+      z-index: 2;
+      transition: opacity 0.3s ease;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .gate-frame.ghost-cracked ~ .underworld-rift {
+      opacity: 0.9;
+      animation: riftFlicker 0.15s infinite alternate;
+    }
+
+    @keyframes riftFlicker {
+      0% { opacity: 0.55; filter: brightness(0.8); }
+      100% { opacity: 1; filter: brightness(1.5); }
+    }
+
+    /* 青銅巨門外框結構 */
+    .gate-frame {
+      position: relative;
+      width: 92vw;
+      max-width: 1100px;
+      height: 88vh;
+      max-height: 820px;
+      z-index: 5;
+      display: flex;
+      box-shadow: 0 0 80px rgba(0, 0, 0, 0.95), inset 0 0 40px rgba(0, 0, 0, 0.9);
+      border-radius: 8px;
+      border: 6px solid #1a2a26;
+      outline: 2px solid #2d4a43;
+      transform-style: preserve-3d;
+      transition: transform 1.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* 左門與右門 */
+    .door-leaf {
+      position: relative;
+      width: 50%;
+      height: 100%;
+      background-image: url('assets/bronze_gate.jpg');
+      background-size: 200% 100%;
+      background-repeat: no-repeat;
+      transform-style: preserve-3d;
+      transition: transform 2.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s ease;
+      box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8);
+    }
+
+    .door-leaf.left {
+      background-position: left center;
+      transform-origin: left center;
+      border-right: 2px solid rgba(0, 0, 0, 0.8);
+    }
+
+    .door-leaf.right {
+      background-position: right center;
+      transform-origin: right center;
+      border-left: 2px solid rgba(0, 0, 0, 0.8);
+    }
+
+    /* 開門成功狀態 */
+    .gate-frame.opened .door-leaf.left {
+      transform: rotateY(-110deg);
+      box-shadow: 30px 0 50px rgba(0, 0, 0, 0.7);
+    }
+
+    .gate-frame.opened .door-leaf.right {
+      transform: rotateY(110deg);
+      box-shadow: -30px 0 50px rgba(0, 0, 0, 0.7);
+    }
+
+    .gate-frame.opened {
+      transform: scale(1.15) translateZ(100px);
+    }
+
+    /* 門縫被厲鬼撕開狀態 (Crack Open) */
+    .gate-frame.ghost-cracked .door-leaf.left {
+      transform: rotateY(-36deg);
+      box-shadow: 25px 0 45px rgba(0, 0, 0, 0.95);
+      filter: drop-shadow(0 0 25px rgba(255, 30, 39, 0.6));
+      transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    .gate-frame.ghost-cracked .door-leaf.right {
+      transform: rotateY(36deg);
+      box-shadow: -25px 0 45px rgba(0, 0, 0, 0.95);
+      filter: drop-shadow(0 0 25px rgba(255, 30, 39, 0.6));
+      transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
+    }
+
+    /* 門縫微光 */
+    .seam-light {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 100%;
+      background: #3dfacb;
+      box-shadow: 0 0 15px #3dfacb, 0 0 30px #3dfacb;
+      z-index: 10;
+      opacity: 0.7;
+      animation: pulseLight 3s infinite alternate;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .gate-frame.opened .seam-light,
+    .gate-frame.ghost-cracked .seam-light {
+      opacity: 0;
+    }
+
+    @keyframes pulseLight {
+      0% { opacity: 0.3; filter: blur(1px); }
+      100% { opacity: 0.9; filter: blur(3px); }
+    }
+
+    /* 密碼機關古盤 UI */
+    .lock-mechanism {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+      background: radial-gradient(circle, rgba(12, 24, 20, 0.92) 0%, rgba(5, 10, 8, 0.96) 80%);
+      border: 3px solid #d4af37;
+      border-radius: 50%;
+      width: 320px;
+      height: 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 35px rgba(0, 0, 0, 0.9), 0 0 25px var(--gold-glow), inset 0 0 20px rgba(0, 0, 0, 0.9);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .gate-frame.opened .lock-mechanism {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.6) rotate(180deg);
+      pointer-events: none;
+    }
+
+    /* 厲鬼衝出時，鎖盤完全隱藏消失 */
+    .gate-frame.ghost-cracked .lock-mechanism {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.3);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    /* 盤面符文外圈 */
+    .rune-ring {
+      position: absolute;
+      width: 94%;
+      height: 94%;
+      border-radius: 50%;
+      border: 2px dashed rgba(212, 175, 55, 0.6);
+      animation: slowRotate 30s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes slowRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .lock-title {
+      font-size: 1.1rem;
+      color: #e6c875;
+      letter-spacing: 4px;
+      margin-bottom: 12px;
+      text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    }
+
+    .password-display {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .pin-digit {
+      width: 38px;
+      height: 46px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1.5px solid #3dfacb;
+      border-radius: 6px;
+      color: #3dfacb;
+      font-size: 1.6rem;
+      font-weight: 900;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: inset 0 0 8px rgba(61, 250, 203, 0.3), 0 0 10px rgba(61, 250, 203, 0.2);
+    }
+
+    .pin-input-real {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .hint-text {
+      font-size: 0.75rem;
+      color: #8fa89b;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    /* 突發驚悚 鬼怪層 (在青銅門裂隙深處，青銅門始終保持在背景可見) */
+    .ghost-emergence-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 100%;
+      max-width: 1100px;
+      max-height: 820px;
+      z-index: 18;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: visible;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .ghost-emergence-container.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .ghost-spirit {
+      position: absolute;
+      width: 115%;
+      height: 115%;
+      object-fit: contain;
+      mix-blend-mode: screen; /* 完美透明融合，青銅門清晰可見 */
+      filter: contrast(1.4) brightness(1.3) drop-shadow(0 0 40px #00ff88);
+      transform: translateZ(0) scale(0.1);
+    }
+
+    .ghost-emergence-container.active .ghost-spirit {
+      animation: ghostBurstFromGate 1.8s cubic-bezier(0.15, 0.85, 0.25, 1) forwards;
+    }
+
+    /* 厲鬼從青銅門裂縫深處衝出的震撼軌跡 */
+    @keyframes ghostBurstFromGate {
+      0% {
+        transform: scale(0.08) translateY(20px) rotate(-3deg);
+        filter: brightness(0.2) drop-shadow(0 0 5px #00ff88);
+        opacity: 0;
+      }
+      22% {
+        opacity: 1;
+        filter: brightness(1.8) contrast(1.5) drop-shadow(0 0 60px #00ff88) drop-shadow(0 0 90px red);
+      }
+      45% {
+        transform: scale(1.35) translateY(-10px) rotate(2deg);
+        filter: brightness(1.6) contrast(1.4) drop-shadow(0 0 80px red);
+      }
+      75% {
+        transform: scale(1.45) translateY(5px) rotate(-1deg);
+        opacity: 0.95;
+      }
+      100% {
+        transform: scale(2.0) translateY(-30px);
+        opacity: 0;
+        filter: brightness(0) blur(25px);
+      }
+    }
+
+    /* 血色驚悚閃爍遮罩 */
+    .blood-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle, rgba(255, 0, 0, 0.4) 0%, rgba(80, 0, 0, 0.8) 80%);
+      mix-blend-mode: hard-light;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 90;
+    }
+
+    .blood-overlay.flash {
+      animation: redFlash 1.6s ease-out forwards;
+    }
+
+    @keyframes redFlash {
+      0%, 25%, 50% { opacity: 0.85; }
+      12%, 37% { opacity: 0.15; }
+      100% { opacity: 0; }
+    }
+
+    /* 螢幕震動動畫 (Screen Shake) */
+    .shake-intense {
+      animation: intenseShake 0.75s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    @keyframes intenseShake {
+      10%, 90% { transform: translate3d(-8px, 6px, 0) rotate(-1.5deg); }
+      20%, 80% { transform: translate3d(10px, -8px, 0) rotate(2deg); }
+      30%, 50%, 70% { transform: translate3d(-14px, 10px, 0) rotate(-2.5deg); }
+      40%, 60% { transform: translate3d(14px, -10px, 0) rotate(2.5deg); }
+    }
+
+    /* 狀態訊息提示浮層 */
+    .status-toast {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 25px;
+      background: rgba(0, 0, 0, 0.85);
+      border-radius: 20px;
+      font-size: 1rem;
+      letter-spacing: 2px;
+      z-index: 60;
+      border: 1px solid #d4af37;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+      transition: all 0.3s ease;
+      opacity: 0.9;
+    }
+
+    /* 快捷控制面板 (置底) */
+    .control-deck {
+      position: absolute;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      display: flex;
+      gap: 15px;
+      background: rgba(8, 14, 12, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 12px 24px;
+      border-radius: 30px;
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    .btn-action {
+      background: linear-gradient(135deg, #1f362e, #101c18);
+      color: #f0e6d2;
+      border: 1px solid #d4af37;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    .btn-action:hover {
+      background: linear-gradient(135deg, #2e5246, #1a2f28);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 0 15px var(--gold-glow);
+    }
+
+    .btn-action.success {
+      border-color: #3dfacb;
+    }
+    .btn-action.success:hover {
+      box-shadow: 0 0 18px rgba(61, 250, 203, 0.7);
+    }
+
+    .btn-action.fail {
+      border-color: #ff3b30;
+      background: linear-gradient(135deg, #3d1416, #1f0809);
+    }
+    .btn-action.fail:hover {
+      background: linear-gradient(135deg, #571b1e, #2e0b0d);
+      box-shadow: 0 0 20px rgba(255, 59, 48, 0.8);
+    }
+
+    .btn-action.reset {
+      border-color: #aaa;
+      background: #222;
+    }
+
+    .audio-toggle {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #aaa;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    .audio-toggle:hover {
+      color: #3dfacb;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 狀態提示 -->
+  <div id="statusToast" class="status-toast">📜 請輸入密碼解鎖青銅古門 (預設密碼: 8888)</div>
+
+  <!-- 3D 視角容器 -->
+  <div id="sceneContainer" class="scene-viewport">
+    
+    <!-- 門後的神聖殿堂 (進入系統後的背景) -->
+    <div id="sanctumBg" class="sanctum-background">
+      <div class="sanctum-content">
+        <div class="sanctum-title">✨ 藏書閣 · 封印解除 ✨</div>
+        <div class="sanctum-desc">歡迎進入個人書櫃與借閱統計系統</div>
+      </div>
+    </div>
+
+    <!-- 幽冥煞氣裂隙邪光 (門縫透出) -->
+    <div id="underworldRift" class="underworld-rift"></div>
+
+    <!-- 青銅巨門本體 (背景始終可見) -->
+    <div id="gateFrame" class="gate-frame">
+      <!-- 門縫微光 -->
+      <div class="seam-light"></div>
+
+      <!-- 左門扇 -->
+      <div class="door-leaf left"></div>
+
+      <!-- 右門扇 -->
+      <div class="door-leaf right"></div>
+
+      <!-- 密碼機關盤 -->
+      <div id="lockMechanism" class="lock-mechanism">
+        <div class="rune-ring"></div>
+        <div class="lock-title">饕餮暗鎖</div>
+        
+        <div class="password-display">
+          <div class="pin-digit" id="d1">-</div>
+          <div class="pin-digit" id="d2">-</div>
+          <div class="pin-digit" id="d3">-</div>
+          <div class="pin-digit" id="d4">-</div>
+        </div>
+
+        <input type="password" id="pinInput" class="pin-input-real" maxlength="4" autofocus>
+        
+        <div class="hint-text">請直接敲擊鍵盤數字或點擊下方測試</div>
+
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-action" style="padding: 6px 14px; font-size: 0.8rem;" onclick="handleKeypad('1')">1</button>
+          <button class="btn-action" style="padding: 6px 14px; font-size: 0.8rem;" onclick="handleKeypad('8')">8</button>
+          <button class="btn-action" style="padding: 6px 14px; font-size: 0.8rem;" onclick="handleKeypad('clear')">重填</button>
+        </div>
+      </div>
+
+      <!-- 突發厲鬼 (直接從青銅門裂縫深處破門竄出，青銅門在背景清晰可見) -->
+      <div id="ghostEmergence" class="ghost-emergence-container">
+        <img src="assets/ghost_emerge.jpg" alt="Ghost Bursting from Gate" class="ghost-spirit">
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- 血紅閃爍遮罩 -->
+  <div id="bloodOverlay" class="blood-overlay"></div>
+
+  <!-- 控制與展示面板 -->
+  <div class="control-deck">
+    <button class="btn-action success" onclick="triggerSuccess()">
+      <span>🔓</span> 測試：開門成功 (Flash動態開門)
+    </button>
+    <button class="btn-action fail" onclick="triggerFail()">
+      <span>👻</span> 測試：密碼失敗 (厲鬼破門突襲)
+    </button>
+    <button class="btn-action reset" onclick="resetGate()">
+      <span>🔄</span> 重置大門
+    </button>
+    <div class="audio-toggle" onclick="toggleAudio()">
+      <span id="audioIcon">🔊</span>
+      <span id="audioText">音效已啟用</span>
+    </div>
+  </div>
+
+  <script>
+    // --- Web Audio 逼真音效合成引擎 (無須外部音檔) ---
+    let audioCtx = null;
+    let audioEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleAudio() {
+      audioEnabled = !audioEnabled;
+      document.getElementById('audioIcon').textContent = audioEnabled ? '🔊' : '🔇';
+      document.getElementById('audioText').textContent = audioEnabled ? '音效已啟用' : '音效已靜音';
+    }
+
+    // 齒輪/石鍵點擊音
+    function playClickSound() {
+      if (!audioEnabled) return;
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(60, audioCtx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.08);
+    }
+
+    // 開門震撼石門轟鳴聲
+    function playGateOpenSound() {
+      if (!audioEnabled) return;
+      initAudio();
+      
+      const bufferSize = audioCtx.sampleRate * 2.5;
+      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+      const whiteNoise = audioCtx.createBufferSource();
+      whiteNoise.buffer = noiseBuffer;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(120, audioCtx.currentTime);
+      filter.frequency.linearRampToValueAtTime(450, audioCtx.currentTime + 1.2);
+      filter.frequency.linearRampToValueAtTime(80, audioCtx.currentTime + 2.5);
+
+      const noiseGain = audioCtx.createGain();
+      noiseGain.gain.setValueAtTime(0.6, audioCtx.currentTime);
+      noiseGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2.5);
+
+      whiteNoise.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(audioCtx.destination);
+      whiteNoise.start();
+
+      const freqs = [110, 164.8, 220, 329.6];
+      freqs.forEach((f) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(f, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime + 0.2);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2.0);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(audioCtx.currentTime + 0.1);
+        osc.stop(audioCtx.currentTime + 2.0);
+      });
+    }
+
+    // 青銅門撞擊重響 (門猛烈關閉聲)
+    function playGateSlamSound() {
+      if (!audioEnabled) return;
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(80, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(20, audioCtx.currentTime + 0.5);
+      gain.gain.setValueAtTime(0.85, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.5);
+    }
+
+    // 密碼錯誤厲鬼尖嘯與突發轟鳴音效
+    function playGhostScreamSound() {
+      if (!audioEnabled) return;
+      initAudio();
+
+      // 1. 尖銳刺耳的調頻尖嘯 (FM Synthesis)
+      const carrier = audioCtx.createOscillator();
+      const modulator = audioCtx.createOscillator();
+      const modGain = audioCtx.createGain();
+      const mainGain = audioCtx.createGain();
+
+      carrier.type = 'sawtooth';
+      carrier.frequency.setValueAtTime(450, audioCtx.currentTime);
+      carrier.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.3);
+      carrier.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 1.6);
+
+      modulator.type = 'square';
+      modulator.frequency.setValueAtTime(50, audioCtx.currentTime);
+      modGain.gain.setValueAtTime(350, audioCtx.currentTime);
+
+      modulator.connect(modGain);
+      modGain.connect(carrier.frequency);
+
+      mainGain.gain.setValueAtTime(0.85, audioCtx.currentTime);
+      mainGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.7);
+
+      carrier.connect(mainGain);
+      mainGain.connect(audioCtx.destination);
+
+      modulator.start();
+      carrier.start();
+      modulator.stop(audioCtx.currentTime + 1.7);
+      carrier.stop(audioCtx.currentTime + 1.7);
+
+      // 2. 破門撞擊低音
+      const oscLow = audioCtx.createOscillator();
+      const gainLow = audioCtx.createGain();
+      oscLow.type = 'sine';
+      oscLow.frequency.setValueAtTime(200, audioCtx.currentTime);
+      oscLow.frequency.exponentialRampToValueAtTime(35, audioCtx.currentTime + 0.7);
+      gainLow.gain.setValueAtTime(0.9, audioCtx.currentTime);
+      gainLow.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.7);
+      oscLow.connect(gainLow);
+      gainLow.connect(audioCtx.destination);
+      oscLow.start();
+      oscLow.stop(audioCtx.currentTime + 0.7);
+    }
+
+    // --- 互動邏輯 ---
+    const gateFrame = document.getElementById('gateFrame');
+    const sanctumBg = document.getElementById('sanctumBg');
+    const ghostEmergence = document.getElementById('ghostEmergence');
+    const bloodOverlay = document.getElementById('bloodOverlay');
+    const sceneContainer = document.getElementById('sceneContainer');
+    const statusToast = document.getElementById('statusToast');
+    
+    let currentInput = '';
+    const CORRECT_PIN = '8888';
+
+    // 鍵盤輸入監聽
+    document.addEventListener('keydown', (e) => {
+      if (gateFrame.classList.contains('opened') || ghostEmergence.classList.contains('active')) return;
+      if (e.key >= '0' && e.key <= '9') {
+        handleKeypad(e.key);
+      } else if (e.key === 'Backspace') {
+        currentInput = currentInput.slice(0, -1);
+        updatePinDisplay();
+      } else if (e.key === 'Enter') {
+        if (currentInput.length > 0) {
+          checkPassword();
+        }
+      }
+    });
+
+    function handleKeypad(key) {
+      if (key === 'clear') {
+        currentInput = '';
+        updatePinDisplay();
+        playClickSound();
+        return;
+      }
+      if (currentInput.length < 4) {
+        currentInput += key;
+        playClickSound();
+        updatePinDisplay();
+        if (currentInput.length === 4) {
+          setTimeout(checkPassword, 300);
+        }
+      }
+    }
+
+    function updatePinDisplay() {
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById('d' + i);
+        if (i <= currentInput.length) {
+          el.textContent = '●';
+          el.style.color = '#d4af37';
+          el.style.borderColor = '#d4af37';
+        } else {
+          el.textContent = '-';
+          el.style.color = '#3dfacb';
+          el.style.borderColor = '#3dfacb';
+        }
+      }
+    }
+
+    function checkPassword() {
+      if (currentInput === CORRECT_PIN) {
+        triggerSuccess();
+      } else {
+        triggerFail();
+      }
+    }
+
+    // 1. 開門成功 (3D 大門向內推開)
+    function triggerSuccess() {
+      statusToast.textContent = '🌟 符文共鳴！青銅巨門緩緩開啟...';
+      statusToast.style.borderColor = '#3dfacb';
+      statusToast.style.color = '#3dfacb';
+
+      playGateOpenSound();
+
+      gateFrame.classList.remove('ghost-cracked');
+      ghostEmergence.classList.remove('active');
+      gateFrame.classList.add('opened');
+      sanctumBg.classList.add('revealed');
+    }
+
+    // 2. 密碼失敗 (青銅門裂開，厲鬼從門縫深處衝出！)
+    function triggerFail() {
+      statusToast.textContent = '⚠️ 封印暴走！青銅門裂開，千年怨靈衝出！';
+      statusToast.style.borderColor = '#ff3b30';
+      statusToast.style.color = '#ff3b30';
+
+      playGhostScreamSound();
+
+      // 青銅門兩扇震裂半開
+      gateFrame.classList.add('ghost-cracked');
+      // 厲鬼從青銅門裂隙深處破門竄出
+      ghostEmergence.classList.add('active');
+      // 全場震動與血色閃爍
+      sceneContainer.classList.add('shake-intense');
+      bloodOverlay.classList.add('flash');
+
+      setTimeout(() => {
+        sceneContainer.classList.remove('shake-intense');
+      }, 750);
+
+      // 厲鬼消散，青銅門猛力重擊關閉
+      setTimeout(() => {
+        ghostEmergence.classList.remove('active');
+        gateFrame.classList.remove('ghost-cracked');
+        playGateSlamSound();
+        bloodOverlay.classList.remove('flash');
+        currentInput = '';
+        updatePinDisplay();
+        statusToast.textContent = '💀 厲鬼遁回門內，青銅門緊閉！請重新嘗試。';
+      }, 1900);
+    }
+
+    // 3. 重置大門
+    function resetGate() {
+      gateFrame.classList.remove('opened', 'ghost-cracked');
+      sanctumBg.classList.remove('revealed');
+      ghostEmergence.classList.remove('active');
+      bloodOverlay.classList.remove('flash');
+      currentInput = '';
+      updatePinDisplay();
+      statusToast.textContent = '📜 請輸入密碼解鎖青銅古門 (預設密碼: 8888)';
+      statusToast.style.borderColor = '#d4af37';
+      statusToast.style.color = '#e0e0e0';
+      playClickSound();
+    }
+  </script>
+</body>
+</html>
