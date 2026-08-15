@@ -34,53 +34,289 @@ function initApp() {
   renderApp();
 }
 
-// 開機畫面：需輸入密碼才能開啟青銅門
-// 注意：這只是純前端的簡單門鎖，防君子不防懂技術的人
-const BOOT_PASSWORD = '520945';
+// ==========================================================================
+// 3D 古老青銅門機關與厲鬼破門 (Boot Screen Module)
+// ==========================================================================
+const VALID_BOOT_PASSWORDS = ['520945', '8888'];
+let bootAudioCtx = null;
+let bootAudioEnabled = true;
+
+function initBootAudio() {
+  if (!bootAudioCtx) {
+    bootAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (bootAudioCtx.state === 'suspended') {
+    bootAudioCtx.resume();
+  }
+}
+
+window.toggleBootAudio = function() {
+  bootAudioEnabled = !bootAudioEnabled;
+  const icon = document.getElementById('boot-audio-icon');
+  const text = document.getElementById('boot-audio-text');
+  if (icon && text) {
+    icon.innerHTML = bootAudioEnabled ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
+    text.textContent = bootAudioEnabled ? '音效已啟用' : '音效已靜音';
+  }
+};
+
+function playBootClickSound() {
+  if (!bootAudioEnabled) return;
+  initBootAudio();
+  try {
+    const osc = bootAudioCtx.createOscillator();
+    const gain = bootAudioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(180, bootAudioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(60, bootAudioCtx.currentTime + 0.08);
+    gain.gain.setValueAtTime(0.3, bootAudioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, bootAudioCtx.currentTime + 0.08);
+    osc.connect(gain);
+    gain.connect(bootAudioCtx.destination);
+    osc.start();
+    osc.stop(bootAudioCtx.currentTime + 0.08);
+  } catch (e) { console.warn(e); }
+}
+
+function playBootGateOpenSound() {
+  if (!bootAudioEnabled) return;
+  initBootAudio();
+  try {
+    const bufferSize = bootAudioCtx.sampleRate * 2.5;
+    const noiseBuffer = bootAudioCtx.createBuffer(1, bufferSize, bootAudioCtx.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1;
+    }
+    const whiteNoise = bootAudioCtx.createBufferSource();
+    whiteNoise.buffer = noiseBuffer;
+
+    const filter = bootAudioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(120, bootAudioCtx.currentTime);
+    filter.frequency.linearRampToValueAtTime(450, bootAudioCtx.currentTime + 1.2);
+    filter.frequency.linearRampToValueAtTime(80, bootAudioCtx.currentTime + 2.5);
+
+    const noiseGain = bootAudioCtx.createGain();
+    noiseGain.gain.setValueAtTime(0.6, bootAudioCtx.currentTime);
+    noiseGain.gain.exponentialRampToValueAtTime(0.01, bootAudioCtx.currentTime + 2.5);
+
+    whiteNoise.connect(filter);
+    filter.connect(noiseGain);
+    noiseGain.connect(bootAudioCtx.destination);
+    whiteNoise.start();
+
+    const freqs = [110, 164.8, 220, 329.6];
+    freqs.forEach((f) => {
+      const osc = bootAudioCtx.createOscillator();
+      const gain = bootAudioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(f, bootAudioCtx.currentTime);
+      gain.gain.setValueAtTime(0.15, bootAudioCtx.currentTime + 0.2);
+      gain.gain.exponentialRampToValueAtTime(0.001, bootAudioCtx.currentTime + 2.0);
+      osc.connect(gain);
+      gain.connect(bootAudioCtx.destination);
+      osc.start(bootAudioCtx.currentTime + 0.1);
+      osc.stop(bootAudioCtx.currentTime + 2.0);
+    });
+  } catch (e) { console.warn(e); }
+}
+
+function playBootGateSlamSound() {
+  if (!bootAudioEnabled) return;
+  initBootAudio();
+  try {
+    const osc = bootAudioCtx.createOscillator();
+    const gain = bootAudioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(80, bootAudioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(20, bootAudioCtx.currentTime + 0.5);
+    gain.gain.setValueAtTime(0.85, bootAudioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, bootAudioCtx.currentTime + 0.5);
+    osc.connect(gain);
+    gain.connect(bootAudioCtx.destination);
+    osc.start();
+    osc.stop(bootAudioCtx.currentTime + 0.5);
+  } catch (e) { console.warn(e); }
+}
+
+function playBootGhostScreamSound() {
+  if (!bootAudioEnabled) return;
+  initBootAudio();
+  try {
+    const carrier = bootAudioCtx.createOscillator();
+    const modulator = bootAudioCtx.createOscillator();
+    const modGain = bootAudioCtx.createGain();
+    const mainGain = bootAudioCtx.createGain();
+
+    carrier.type = 'sawtooth';
+    carrier.frequency.setValueAtTime(450, bootAudioCtx.currentTime);
+    carrier.frequency.exponentialRampToValueAtTime(1400, bootAudioCtx.currentTime + 0.3);
+    carrier.frequency.exponentialRampToValueAtTime(220, bootAudioCtx.currentTime + 1.6);
+
+    modulator.type = 'square';
+    modulator.frequency.setValueAtTime(50, bootAudioCtx.currentTime);
+    modGain.gain.setValueAtTime(350, bootAudioCtx.currentTime);
+
+    modulator.connect(modGain);
+    modGain.connect(carrier.frequency);
+
+    mainGain.gain.setValueAtTime(0.85, bootAudioCtx.currentTime);
+    mainGain.gain.exponentialRampToValueAtTime(0.01, bootAudioCtx.currentTime + 1.7);
+
+    carrier.connect(mainGain);
+    mainGain.connect(bootAudioCtx.destination);
+
+    modulator.start();
+    carrier.start();
+    modulator.stop(bootAudioCtx.currentTime + 1.7);
+    carrier.stop(bootAudioCtx.currentTime + 1.7);
+
+    const oscLow = bootAudioCtx.createOscillator();
+    const gainLow = bootAudioCtx.createGain();
+    oscLow.type = 'sine';
+    oscLow.frequency.setValueAtTime(200, bootAudioCtx.currentTime);
+    oscLow.frequency.exponentialRampToValueAtTime(35, bootAudioCtx.currentTime + 0.7);
+    gainLow.gain.setValueAtTime(0.9, bootAudioCtx.currentTime);
+    gainLow.gain.exponentialRampToValueAtTime(0.01, bootAudioCtx.currentTime + 0.7);
+    oscLow.connect(gainLow);
+    gainLow.connect(bootAudioCtx.destination);
+    oscLow.start();
+    oscLow.stop(bootAudioCtx.currentTime + 0.7);
+  } catch (e) { console.warn(e); }
+}
 
 function initBootScreen() {
   const bootScreen = document.getElementById('boot-screen');
   if (!bootScreen) return;
 
-  const form = document.getElementById('boot-password-form');
-  const input = document.getElementById('boot-password-input');
-  const hint = document.getElementById('boot-hint');
+  const ghostEmergence = document.getElementById('ghost-emergence');
+  const bloodOverlay = document.getElementById('blood-overlay');
+  const statusToast = document.getElementById('boot-status-toast');
 
-  let opened = false;
+  let currentInput = '';
+  let isOpening = false;
+  let isJumpscaring = false;
 
-  function openDoor() {
-    if (opened) return;
-    opened = true;
-    bootScreen.classList.add('opening');
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    setTimeout(() => {
-      bootScreen.style.display = 'none';
-    }, prefersReducedMotion ? 450 : 1300);
-  }
-
-  function checkPassword() {
-    if (input.value === BOOT_PASSWORD) {
-      openDoor();
-    } else {
-      hint.textContent = '密碼錯誤，請再試一次';
-      bootScreen.classList.add('shake');
-      input.value = '';
-      setTimeout(() => bootScreen.classList.remove('shake'), 900);
+  function updateDisplay() {
+    for (let i = 1; i <= 6; i++) {
+      const el = document.getElementById('pd' + i);
+      if (!el) continue;
+      if (i <= currentInput.length) {
+        el.textContent = '●';
+        el.style.color = '#d4af37';
+        el.style.borderColor = '#d4af37';
+      } else {
+        el.textContent = '-';
+        el.style.color = '#3dfacb';
+        el.style.borderColor = '#3dfacb';
+      }
     }
   }
 
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      checkPassword();
-    });
+  function handleInput(char) {
+    if (isOpening || isJumpscaring) return;
+    if (char === 'clear') {
+      currentInput = '';
+      updateDisplay();
+      playBootClickSound();
+      return;
+    }
+    if (currentInput.length < 6) {
+      currentInput += char;
+      playBootClickSound();
+      updateDisplay();
+      if (currentInput.length === 6 || currentInput === '8888') {
+        setTimeout(checkPassword, 280);
+      }
+    }
   }
 
-  // 開機畫面點擊聚焦到輸入框，方便直接打字
-  bootScreen.addEventListener('click', (e) => {
-    if (e.target === input || e.target.closest('.boot-password-form')) return;
-    input.focus();
+  window.handleBootKeypad = handleInput;
+
+  function checkPassword() {
+    if (VALID_BOOT_PASSWORDS.includes(currentInput)) {
+      triggerSuccess();
+    } else {
+      triggerFail();
+    }
+  }
+
+  function triggerSuccess() {
+    if (isOpening) return;
+    isOpening = true;
+
+    if (statusToast) {
+      statusToast.textContent = '🌟 符文共鳴！青銅巨門開啟，進入書櫃...';
+      statusToast.style.borderColor = '#3dfacb';
+      statusToast.style.color = '#3dfacb';
+    }
+
+    playBootGateOpenSound();
+
+    bootScreen.classList.remove('ghost-cracked');
+    if (ghostEmergence) ghostEmergence.classList.remove('active');
+    bootScreen.classList.add('opening');
+
+    setTimeout(() => {
+      bootScreen.classList.add('dismissed');
+      setTimeout(() => {
+        bootScreen.style.display = 'none';
+      }, 1200);
+    }, 1800);
+  }
+
+  function triggerFail() {
+    if (isJumpscaring) return;
+    isJumpscaring = true;
+
+    if (statusToast) {
+      statusToast.textContent = '⚠️ 封印暴走！青銅門裂開，千年怨靈衝出！';
+      statusToast.style.borderColor = '#ff3b30';
+      statusToast.style.color = '#ff3b30';
+    }
+
+    playBootGhostScreamSound();
+
+    bootScreen.classList.add('ghost-cracked');
+    if (ghostEmergence) ghostEmergence.classList.add('active');
+    bootScreen.classList.add('shake-intense');
+    if (bloodOverlay) bloodOverlay.classList.add('flash');
+
+    setTimeout(() => {
+      bootScreen.classList.remove('shake-intense');
+    }, 750);
+
+    setTimeout(() => {
+      if (ghostEmergence) ghostEmergence.classList.remove('active');
+      bootScreen.classList.remove('ghost-cracked');
+      playBootGateSlamSound();
+      if (bloodOverlay) bloodOverlay.classList.remove('flash');
+      currentInput = '';
+      updateDisplay();
+      if (statusToast) {
+        statusToast.textContent = '💀 厲鬼遁回門內，青銅門緊閉！請重新嘗試。';
+      }
+      isJumpscaring = false;
+    }, 1900);
+  }
+
+  // 實體鍵盤監聽
+  document.addEventListener('keydown', (e) => {
+    if (isOpening || isJumpscaring || bootScreen.style.display === 'none') return;
+    if (e.key >= '0' && e.key <= '9') {
+      handleInput(e.key);
+    } else if (e.key === 'Backspace') {
+      currentInput = currentInput.slice(0, -1);
+      updateDisplay();
+    } else if (e.key === 'Enter') {
+      if (currentInput.length > 0) {
+        checkPassword();
+      }
+    }
   });
+
+  updateDisplay();
 }
 
 // 從 LocalStorage 載入資料

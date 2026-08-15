@@ -42,383 +42,434 @@
   padding: 0;
 }
 
-/* 開機畫面：青銅門 */
+/* ==========================================================================
+   3D 古老青銅巨門開場 (Boot Screen 3D System)
+   ========================================================================== */
 .boot-screen {
   position: fixed;
   inset: 0;
-  z-index: 5000;
+  z-index: 99999;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 40%, #0f1a16 0%, #050908 70%);
-  cursor: pointer;
+  background: radial-gradient(circle at center, #152422 0%, #060b0a 70%, #000 100%);
+  perspective: 1200px;
+  perspective-origin: center center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  font-family: 'Noto Serif TC', 'Cinzel', serif;
+  transition: opacity 1.2s ease, visibility 1.2s ease;
 }
 
-.boot-screen::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(232, 255, 248, 0.95), rgba(150, 255, 222, 0.45) 40%, transparent 70%);
-  transform: translate(-50%, -50%) scale(1);
+.boot-screen.dismissed {
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 }
 
-.boot-screen.opening::after {
-  animation: bootFlash 0.9s ease-out forwards;
-}
-
-@keyframes bootFlash {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
-  18% { opacity: 1; }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(70); }
-}
-
-.boot-mist {
+/* 狀態訊息提示浮層 */
+.boot-status-toast {
   position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 82%, rgba(140, 255, 220, 0.14), transparent 55%);
+  top: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 24px;
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 20px;
+  font-size: 0.95rem;
+  letter-spacing: 2px;
+  color: #e0e0e0;
+  z-index: 60;
+  border: 1px solid #d4af37;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+  transition: all 0.3s ease;
   pointer-events: none;
+  text-align: center;
 }
 
-.bronze-door {
+/* 音效控制開關 (右上角) */
+.boot-audio-toggle {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10, 20, 16, 0.75);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 8px 16px;
+  border-radius: 20px;
+  color: #a8c9b8;
+  font-size: 0.85rem;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+}
+
+.boot-audio-toggle:hover {
+  border-color: #3dfacb;
+  color: #3dfacb;
+  box-shadow: 0 0 12px rgba(61, 250, 203, 0.4);
+}
+
+/* 幽冥煞氣裂隙光 (門縫透出的綠紅邪光) */
+.underworld-rift {
   position: absolute;
   top: 0;
-  bottom: 0;
-  width: 50%;
-  background:
-    radial-gradient(circle at 5px 5px, rgba(230, 225, 190, 0.4) 0 1.6px, transparent 1.9px) 0 0/18px 18px repeat,
-    radial-gradient(circle at 5px 5px, rgba(0, 0, 0, 0.4) 1.6px 2.4px, transparent 2.6px) 0 0/18px 18px repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M2 2 L14 2 L14 14 L8 14 L8 8 L20 8 L20 20 L2 20 Z' fill='none' stroke='%23c8e6d2' stroke-opacity='0.16' stroke-width='1.5'/%3E%3C/svg%3E") left top/28px 28px repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 140 132'%3E%3Ccircle cx='70' cy='66' r='30' fill='none' stroke='%23d7c98a' stroke-opacity='0.4' stroke-width='3'/%3E%3Ccircle cx='70' cy='66' r='20' fill='none' stroke='%23d7c98a' stroke-opacity='0.3' stroke-width='2'/%3E%3Ccircle cx='58' cy='60' r='4' fill='%23d7c98a' fill-opacity='0.45'/%3E%3Ccircle cx='82' cy='60' r='4' fill='%23d7c98a' fill-opacity='0.45'/%3E%3Cpath d='M45 45 Q70 30 95 45' fill='none' stroke='%23d7c98a' stroke-opacity='0.35' stroke-width='2'/%3E%3Cpath d='M50 85 Q70 100 90 85' fill='none' stroke='%23d7c98a' stroke-opacity='0.35' stroke-width='2'/%3E%3Cpath d='M20 15 Q35 5 50 15' fill='none' stroke='%23d7c98a' stroke-opacity='0.22' stroke-width='1.5'/%3E%3Cpath d='M90 15 Q105 5 120 15' fill='none' stroke='%23d7c98a' stroke-opacity='0.22' stroke-width='1.5'/%3E%3Cpath d='M20 117 Q35 127 50 117' fill='none' stroke='%23d7c98a' stroke-opacity='0.22' stroke-width='1.5'/%3E%3Cpath d='M90 117 Q105 127 120 117' fill='none' stroke='%23d7c98a' stroke-opacity='0.22' stroke-width='1.5'/%3E%3C/svg%3E") center top/96px 96px repeat,
-    repeating-linear-gradient(to bottom, transparent 0 84px, rgba(0, 0, 0, 0.55) 84px 87px, rgba(210, 255, 230, 0.25) 87px 89px, transparent 89px 91px, rgba(0, 0, 0, 0.4) 91px 93px, transparent 93px 96px) 0 0/auto no-repeat,
-    repeating-linear-gradient(to right, transparent 0 84px, rgba(0, 0, 0, 0.55) 84px 87px, rgba(210, 255, 230, 0.25) 87px 89px, transparent 89px 91px, rgba(0, 0, 0, 0.4) 91px 93px, transparent 93px 96px) 0 0/auto no-repeat,
-    repeating-linear-gradient(45deg, rgba(180, 220, 200, 0.06) 0 2px, transparent 2px 7px) 0 0/auto no-repeat,
-    repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.22) 0 2px, transparent 2px 7px) 0 0/auto no-repeat,
-    radial-gradient(circle at 30% 22%, rgba(140, 190, 160, 0.2), transparent 32%) 0 0/auto no-repeat,
-    radial-gradient(circle at 68% 78%, rgba(90, 150, 120, 0.18), transparent 36%) 0 0/auto no-repeat,
-    radial-gradient(circle at 45% 55%, rgba(150, 95, 60, 0.14), transparent 40%) 0 0/auto no-repeat,
-    linear-gradient(135deg, #17251f 0%, #2c473a 32%, #4c7360 52%, #223a2f 78%, #0c1712 100%);
-  box-shadow:
-    inset 0 0 0 3px rgba(0, 0, 0, 0.5),
-    inset 0 0 0 6px rgba(210, 230, 210, 0.16),
-    inset 0 0 0 8px rgba(0, 0, 0, 0.45),
-    inset 0 0 0 12px rgba(210, 230, 210, 0.1),
-    inset 0 0 0 14px rgba(0, 0, 0, 0.35),
-    inset 0 0 60px rgba(0, 0, 0, 0.55);
-  transition: transform 1.1s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-.door-left {
   left: 0;
-  border-right: 2px solid rgba(180, 255, 230, 0.3);
-}
-
-.door-right {
-  right: 0;
-  border-left: 2px solid rgba(180, 255, 230, 0.3);
-}
-
-.bronze-door::before,
-.bronze-door::after {
-  content: "";
-  position: absolute;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #e7dcae, #8a7038 55%, #2c2210 100%);
-  box-shadow: 0 0 8px rgba(150, 255, 222, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.4);
-  z-index: 1;
-}
-
-.door-left::before { top: 40px; right: 40px; }
-.door-left::after { bottom: 40px; right: 40px; }
-.door-right::before { top: 40px; left: 40px; }
-.door-right::after { bottom: 40px; left: 40px; }
-
-/* 中央機關鎖輪 */
-/* 哥德式四葉窗玫瑰框，襯在機關輪後方 */
-.boot-rosette {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 340px;
-  height: 340px;
-  transform: translate(-50%, -50%);
-  z-index: 1;
-  pointer-events: none;
-  transition: opacity 0.6s ease, transform 0.6s ease;
-  background:
-    radial-gradient(circle at 50% 14%, rgba(70, 110, 90, 0.55) 0 21%, transparent 22%),
-    radial-gradient(circle at 50% 86%, rgba(70, 110, 90, 0.55) 0 21%, transparent 22%),
-    radial-gradient(circle at 14% 50%, rgba(70, 110, 90, 0.55) 0 21%, transparent 22%),
-    radial-gradient(circle at 86% 50%, rgba(70, 110, 90, 0.55) 0 21%, transparent 22%),
-    radial-gradient(circle at 50% 50%, rgba(23, 37, 31, 0.6) 0 30%, transparent 31%);
-  box-shadow: 0 0 30px rgba(150, 255, 222, 0.12);
-}
-
-.boot-rosette::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 14%, rgba(215, 201, 138, 0.35) 20% 21.5%, transparent 22%),
-    radial-gradient(circle at 50% 86%, rgba(215, 201, 138, 0.35) 20% 21.5%, transparent 22%),
-    radial-gradient(circle at 14% 50%, rgba(215, 201, 138, 0.35) 20% 21.5%, transparent 22%),
-    radial-gradient(circle at 86% 50%, rgba(215, 201, 138, 0.35) 20% 21.5%, transparent 22%);
-}
-
-.boot-screen.opening .boot-rosette {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #00ff88 0%, #ff1e27 40%, transparent 75%);
   opacity: 0;
-  transform: translate(-50%, -50%) scale(1.35);
+  z-index: 2;
+  transition: opacity 0.3s ease;
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
-.boot-mechanism {
+.boot-screen.ghost-cracked .underworld-rift {
+  opacity: 0.9;
+  animation: riftFlicker 0.15s infinite alternate;
+}
+
+@keyframes riftFlicker {
+  0% { opacity: 0.55; filter: brightness(0.8); }
+  100% { opacity: 1; filter: brightness(1.5); }
+}
+
+/* 青銅巨門外框結構 */
+.gate-frame {
+  position: relative;
+  width: 92vw;
+  max-width: 1050px;
+  height: 88vh;
+  max-height: 800px;
+  z-index: 5;
+  display: flex;
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.95), inset 0 0 40px rgba(0, 0, 0, 0.9);
+  border-radius: 8px;
+  border: 6px solid #1a2a26;
+  outline: 2px solid #2d4a43;
+  transform-style: preserve-3d;
+  transition: transform 1.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 左門與右門扇 */
+.door-leaf {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  background-image: url('assets/bronze_gate.jpg');
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  transform-style: preserve-3d;
+  transition: transform 2.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.8s ease;
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8);
+}
+
+.door-leaf.left {
+  background-position: left center;
+  transform-origin: left center;
+  border-right: 2px solid rgba(0, 0, 0, 0.8);
+}
+
+.door-leaf.right {
+  background-position: right center;
+  transform-origin: right center;
+  border-left: 2px solid rgba(0, 0, 0, 0.8);
+}
+
+/* 開門成功 3D 展開 */
+.boot-screen.opening .gate-frame {
+  transform: scale(1.25) translateZ(140px);
+}
+
+.boot-screen.opening .door-leaf.left {
+  transform: rotateY(-110deg);
+  box-shadow: 30px 0 50px rgba(0, 0, 0, 0.7);
+}
+
+.boot-screen.opening .door-leaf.right {
+  transform: rotateY(110deg);
+  box-shadow: -30px 0 50px rgba(0, 0, 0, 0.7);
+}
+
+/* 門縫被厲鬼撕開狀態 (Crack Open) */
+.boot-screen.ghost-cracked .door-leaf.left {
+  transform: rotateY(-36deg);
+  box-shadow: 25px 0 45px rgba(0, 0, 0, 0.95);
+  filter: drop-shadow(0 0 25px rgba(255, 30, 39, 0.6));
+  transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+.boot-screen.ghost-cracked .door-leaf.right {
+  transform: rotateY(36deg);
+  box-shadow: -25px 0 45px rgba(0, 0, 0, 0.95);
+  filter: drop-shadow(0 0 25px rgba(255, 30, 39, 0.6));
+  transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
+}
+
+/* 門縫微光 */
+.seam-light {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 100%;
+  background: #3dfacb;
+  box-shadow: 0 0 15px #3dfacb, 0 0 30px #3dfacb;
+  z-index: 10;
+  opacity: 0.7;
+  animation: seamPulse 3s infinite alternate;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.boot-screen.opening .seam-light,
+.boot-screen.ghost-cracked .seam-light {
+  opacity: 0;
+}
+
+@keyframes seamPulse {
+  0% { opacity: 0.3; filter: blur(1px); }
+  100% { opacity: 0.9; filter: blur(3px); }
+}
+
+/* 密碼機關古盤 UI */
+.lock-mechanism {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 210px;
-  height: 210px;
   transform: translate(-50%, -50%);
-  z-index: 2;
+  z-index: 20;
+  background: radial-gradient(circle, rgba(12, 24, 20, 0.94) 0%, rgba(5, 10, 8, 0.97) 80%);
+  border: 3px solid #d4af37;
+  border-radius: 50%;
+  width: 330px;
+  height: 330px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.9), 0 0 25px rgba(212, 175, 55, 0.6), inset 0 0 20px rgba(0, 0, 0, 0.9);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.boot-screen.opening .lock-mechanism {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6) rotate(180deg);
   pointer-events: none;
-  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-.mech-ring {
+/* 厲鬼衝出時，鎖盤完全隱藏消失 */
+.boot-screen.ghost-cracked .lock-mechanism {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.3);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.rune-ring {
   position: absolute;
-  inset: 0;
+  width: 94%;
+  height: 94%;
   border-radius: 50%;
+  border: 2px dashed rgba(212, 175, 55, 0.6);
+  animation: runeSpin 30s linear infinite;
+  pointer-events: none;
 }
 
-.mech-outer {
-  background: repeating-conic-gradient(from 0deg, #4c7360 0deg 7deg, #16241d 7deg 15deg);
-  -webkit-mask-image: radial-gradient(circle, transparent 62%, #000 63%, #000 96%, transparent 97%);
-  mask-image: radial-gradient(circle, transparent 62%, #000 63%, #000 96%, transparent 97%);
-  box-shadow: 0 0 24px rgba(150, 255, 222, 0.3);
-  animation: mechSpin 50s linear infinite;
-}
-
-.mech-mid {
-  inset: 26px;
-  background: repeating-conic-gradient(from 0deg, rgba(215, 201, 138, 0.6) 0deg 1.4deg, transparent 1.4deg 15deg);
-  -webkit-mask-image: radial-gradient(circle, transparent 68%, #000 69%, #000 94%, transparent 95%);
-  mask-image: radial-gradient(circle, transparent 68%, #000 69%, #000 94%, transparent 95%);
-  animation: mechSpin 70s linear infinite reverse;
-}
-
-.mech-hub {
-  position: absolute;
-  inset: 76px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 38% 32%, #e7dcae, #a68a4c 45%, #4a3a20 78%, #1c140b 100%);
-  box-shadow: 0 0 18px rgba(150, 255, 222, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -3px 6px rgba(0, 0, 0, 0.5);
-}
-
-@keyframes mechSpin {
+@keyframes runeSpin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-.boot-screen.opening .boot-mechanism {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(1.35);
+.lock-title {
+  font-size: 1.15rem;
+  color: #e6c875;
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
 }
 
-.boot-screen.opening .mech-outer,
-.boot-screen.opening .mech-mid {
-  animation-duration: 0.6s;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mech-outer, .mech-mid { animation: none; }
-}
-
-.boot-seam {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 5px;
-  transform: translateX(-50%);
-  background: linear-gradient(to bottom, transparent, rgba(210, 255, 240, 0.95), transparent);
-  box-shadow: 0 0 30px 8px rgba(150, 255, 222, 0.6);
-  animation: seamPulse 2.4s ease-in-out infinite;
-  z-index: 1;
-}
-
-@keyframes seamPulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
-}
-
-.boot-title {
-  position: absolute;
-  top: 76%;
-  left: 50%;
-  z-index: 2;
+.password-display {
   display: flex;
-  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.pin-digit {
+  width: 32px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1.5px solid #3dfacb;
+  border-radius: 6px;
+  color: #3dfacb;
+  font-size: 1.4rem;
+  font-weight: 900;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  box-shadow: inset 0 0 8px rgba(61, 250, 203, 0.3), 0 0 10px rgba(61, 250, 203, 0.2);
+}
+
+.boot-password-real-input {
+  position: absolute;
+  opacity: 0;
   pointer-events: none;
 }
 
-.boot-title-cn {
-  font-family: "Songti TC", "PMingLiU", "Noto Serif TC", serif;
-  font-size: 3rem;
-  letter-spacing: 0.3em;
-  padding-left: 0.3em;
-  color: #e3c878;
-  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.7), 0 -1px 0 rgba(255, 240, 200, 0.3), 0 0 24px rgba(150, 255, 222, 0.45);
+.boot-author-credit {
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  color: #d4af37;
+  margin-bottom: 4px;
+  opacity: 0.85;
 }
 
-.boot-credit {
-  font-size: 0.85rem;
-  letter-spacing: 0.2em;
-  padding-left: 0.2em;
-  color: #a8c9b8;
+.hint-text {
+  font-size: 0.7rem;
+  color: #8fa89b;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
 }
 
-.boot-hint {
-  position: absolute;
-  bottom: 56px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  font-size: 0.8rem;
-  letter-spacing: 0.15em;
-  color: rgba(210, 245, 232, 0.7);
-  animation: hintPulse 2s ease-in-out infinite;
-  pointer-events: none;
-  text-align: center;
-  width: 100%;
-  padding: 0 24px;
-}
-
-@keyframes hintPulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.95; }
-}
-
-.boot-password-form {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 2;
+.quick-num-pad {
   display: flex;
-  gap: 10px;
-  transform: translate(-50%, calc(-50% + 88px));
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 250px;
 }
 
-.boot-password-input {
-  width: 180px;
-  padding: 10px 16px;
-  font-size: 1.1rem;
-  letter-spacing: 0.3em;
-  text-align: center;
-  border-radius: var(--border-radius-pill, 999px);
-  border: 1px solid rgba(210, 245, 232, 0.4);
-  background: rgba(255, 255, 255, 0.08);
-  color: #e3c878;
-  outline: none;
-}
-
-.boot-password-input::placeholder {
-  color: rgba(210, 245, 232, 0.45);
-  letter-spacing: 0.1em;
-}
-
-.boot-password-input:focus {
-  border-color: rgba(150, 255, 222, 0.7);
-  box-shadow: 0 0 0 3px rgba(150, 255, 222, 0.15);
-}
-
-.boot-password-submit {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid rgba(210, 245, 232, 0.4);
-  background: rgba(255, 255, 255, 0.08);
-  color: #e3c878;
-  font-size: 1rem;
+.btn-key {
+  background: linear-gradient(135deg, #1f362e, #101c18);
+  color: #f0e6d2;
+  border: 1px solid rgba(212, 175, 55, 0.6);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.2s ease;
 }
 
-.boot-password-submit:hover {
-  background: rgba(150, 255, 222, 0.18);
+.btn-key:hover {
+  background: #2e5246;
+  color: #fff;
+  border-color: #3dfacb;
+  box-shadow: 0 0 8px rgba(61, 250, 203, 0.6);
 }
 
-.boot-screen.shake .boot-password-form {
-  animation: bootShake 0.4s ease;
+.btn-key.clear {
+  border-color: #ff5252;
+  color: #ff9999;
+}
+.btn-key.clear:hover {
+  background: #571b1e;
+  color: #fff;
 }
 
-@keyframes bootShake {
-  0%, 100% { transform: translate(-50%, calc(-50% + 88px)); }
-  20% { transform: translate(calc(-50% - 10px), calc(-50% + 88px)); }
-  40% { transform: translate(calc(-50% + 10px), calc(-50% + 88px)); }
-  60% { transform: translate(calc(-50% - 8px), calc(-50% + 88px)); }
-  80% { transform: translate(calc(-50% + 8px), calc(-50% + 88px)); }
-}
-
-/* 密碼輸入錯誤時跳出的鬼差 */
-.ghost-guard {
+/* 突發驚悚 鬼怪層 (在青銅門裂隙深處) */
+.ghost-emergence-container {
   position: absolute;
   top: 50%;
   left: 50%;
-  z-index: 4;
-  transform: translate(-50%, -50%) scale(0.2);
-  opacity: 0;
-  filter: drop-shadow(0 0 18px rgba(255, 59, 59, 0.55));
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  max-width: 1050px;
+  max-height: 800px;
+  z-index: 18;
   pointer-events: none;
-}
-
-.boot-screen.shake .ghost-guard {
-  animation: ghostPop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-@keyframes ghostPop {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.2); }
-  15% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
-  25% { transform: translate(-50%, -50%) scale(1); }
-  30% { transform: translate(calc(-50% - 6px), -50%) scale(1); }
-  35% { transform: translate(calc(-50% + 6px), -50%) scale(1); }
-  40% { transform: translate(-50%, -50%) scale(1); }
-  80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
-}
-
-.boot-screen.opening .door-left { transform: translateX(-100%); }
-.boot-screen.opening .door-right { transform: translateX(100%); }
-.boot-screen.opening .boot-seam,
-.boot-screen.opening .boot-title,
-.boot-screen.opening .boot-password-form,
-.boot-screen.opening .boot-hint,
-.boot-screen.opening .ghost-guard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
   opacity: 0;
-}
-.boot-screen.opening .boot-title {
-  transform: translate(-50%, -50%) scale(1.15);
+  visibility: hidden;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .bronze-door { transition: opacity 0.4s ease; }
-  .boot-screen.opening .door-left,
-  .boot-screen.opening .door-right {
-    transform: none;
+.ghost-emergence-container.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.ghost-spirit {
+  position: absolute;
+  width: 115%;
+  height: 115%;
+  object-fit: contain;
+  mix-blend-mode: screen;
+  filter: contrast(1.4) brightness(1.3) drop-shadow(0 0 40px #00ff88);
+  transform: translateZ(0) scale(0.1);
+}
+
+.ghost-emergence-container.active .ghost-spirit {
+  animation: ghostBurstFromGate 1.8s cubic-bezier(0.15, 0.85, 0.25, 1) forwards;
+}
+
+@keyframes ghostBurstFromGate {
+  0% {
+    transform: scale(0.08) translateY(20px) rotate(-3deg);
+    filter: brightness(0.2) drop-shadow(0 0 5px #00ff88);
     opacity: 0;
   }
-  .boot-screen.opening::after { animation: none; }
-  .boot-seam, .boot-hint { animation: none; }
-  .boot-screen.shake .boot-password-form { animation: none; }
-  .boot-screen.shake .ghost-guard { animation: none; }
+  22% {
+    opacity: 1;
+    filter: brightness(1.8) contrast(1.5) drop-shadow(0 0 60px #00ff88) drop-shadow(0 0 90px red);
+  }
+  45% {
+    transform: scale(1.35) translateY(-10px) rotate(2deg);
+    filter: brightness(1.6) contrast(1.4) drop-shadow(0 0 80px red);
+  }
+  75% {
+    transform: scale(1.45) translateY(5px) rotate(-1deg);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(2.0) translateY(-30px);
+    opacity: 0;
+    filter: brightness(0) blur(25px);
+  }
+}
+
+/* 血色驚悚閃爍遮罩 */
+.blood-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle, rgba(255, 0, 0, 0.4) 0%, rgba(80, 0, 0, 0.8) 80%);
+  mix-blend-mode: hard-light;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 90;
+}
+
+.blood-overlay.flash {
+  animation: bloodFlash 1.6s ease-out forwards;
+}
+
+@keyframes bloodFlash {
+  0%, 25%, 50% { opacity: 0.85; }
+  12%, 37% { opacity: 0.15; }
+  100% { opacity: 0; }
+}
+
+/* 螢幕震動動畫 */
+.boot-screen.shake-intense {
+  animation: bootIntenseShake 0.75s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes bootIntenseShake {
+  10%, 90% { transform: translate3d(-8px, 6px, 0) rotate(-1.5deg); }
+  20%, 80% { transform: translate3d(10px, -8px, 0) rotate(2deg); }
+  30%, 50%, 70% { transform: translate3d(-14px, 10px, 0) rotate(-2.5deg); }
+  40%, 60% { transform: translate3d(14px, -10px, 0) rotate(2.5deg); }
 }
 
 .app-footer {
