@@ -349,6 +349,7 @@ function initBootScreen() {
   const ghostEmergence = document.getElementById('ghost-emergence');
   const bloodOverlay = document.getElementById('blood-overlay');
   const statusToast = document.getElementById('boot-status-toast');
+  const bootPwdInput = document.getElementById('boot-password-input');
 
   let currentInput = '';
   let isOpening = false;
@@ -368,16 +369,35 @@ function initBootScreen() {
         el.style.borderColor = '#3dfacb';
       }
     }
+    if (bootPwdInput) {
+      bootPwdInput.value = currentInput;
+    }
   }
 
   function handleInput(char) {
     if (isOpening || isJumpscaring) return;
+    
     if (char === 'clear') {
       currentInput = '';
       updateDisplay();
       playBootClickSound();
       return;
     }
+    
+    if (char === 'backspace') {
+      currentInput = currentInput.slice(0, -1);
+      updateDisplay();
+      playBootClickSound();
+      return;
+    }
+
+    if (char === 'enter') {
+      if (currentInput.length > 0) {
+        checkPassword();
+      }
+      return;
+    }
+
     if (currentInput.length < 6) {
       currentInput += char;
       playBootClickSound();
@@ -389,6 +409,35 @@ function initBootScreen() {
   }
 
   window.handleBootKeypad = handleInput;
+
+  // 專為平板與手機提供點擊聚焦喚醒虛擬鍵盤
+  window.focusBootInput = function() {
+    if (bootPwdInput) {
+      bootPwdInput.focus();
+    }
+  };
+
+  // 監聽平板 / 手機虛擬螢幕鍵盤輸入
+  if (bootPwdInput) {
+    bootPwdInput.addEventListener('input', (e) => {
+      if (isOpening || isJumpscaring) return;
+      const val = e.target.value.replace(/[^0-9]/g, '');
+      currentInput = val.slice(0, 6);
+      playBootClickSound();
+      updateDisplay();
+      if (currentInput.length === 6 || currentInput === '8888') {
+        setTimeout(checkPassword, 280);
+      }
+    });
+
+    bootPwdInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        if (currentInput.length > 0) {
+          checkPassword();
+        }
+      }
+    });
+  }
 
   function checkPassword() {
     if (VALID_BOOT_PASSWORDS.includes(currentInput)) {
@@ -457,7 +506,7 @@ function initBootScreen() {
     }, 1900);
   }
 
-  // 實體鍵盤監聽
+  // 實體鍵盤與觸控按鍵全域監聽
   document.addEventListener('keydown', (e) => {
     if (isOpening || isJumpscaring || bootScreen.style.display === 'none') return;
     if (e.key >= '0' && e.key <= '9') {

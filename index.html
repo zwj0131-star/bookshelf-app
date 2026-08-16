@@ -39,8 +39,8 @@
       <!-- 右門扇 -->
       <div class="door-leaf right"></div>
 
-      <!-- 密碼機關盤 -->
-      <div id="lock-mechanism" class="lock-mechanism">
+      <!-- 密碼機關盤 (專為平板與觸控優化) -->
+      <div id="lock-mechanism" class="lock-mechanism" onclick="window.focusBootInput && window.focusBootInput()">
         <div class="rune-ring"></div>
         <div class="lock-title">饕餮暗鎖</div>
         
@@ -53,19 +53,33 @@
           <div class="pin-digit" id="pd6">-</div>
         </div>
 
-        <input type="password" id="boot-password-input" class="boot-password-real-input" maxlength="6" autofocus>
+        <!-- 平板與手機可喚起純數字大鍵盤 -->
+        <input type="tel" inputmode="numeric" pattern="[0-9]*" id="boot-password-input" class="boot-password-real-input" maxlength="6" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
         
         <div class="boot-author-credit">詹汶瑾 出品 · 自主學習專案</div>
-        <div class="hint-text">請直接敲擊鍵盤或點擊下方數字鍵</div>
+        <div class="hint-text">點擊下方數字或直接敲擊鍵盤</div>
 
-        <div class="quick-num-pad">
-          <button type="button" class="btn-key" onclick="window.handleBootKeypad('5')">5</button>
-          <button type="button" class="btn-key" onclick="window.handleBootKeypad('2')">2</button>
-          <button type="button" class="btn-key" onclick="window.handleBootKeypad('0')">0</button>
-          <button type="button" class="btn-key" onclick="window.handleBootKeypad('9')">9</button>
-          <button type="button" class="btn-key" onclick="window.handleBootKeypad('4')">4</button>
-          <button type="button" class="btn-key" onclick="window.handleBootKeypad('8')">8</button>
-          <button type="button" class="btn-key clear" onclick="window.handleBootKeypad('clear')">重填</button>
+        <!-- 完整的 0-9 符文觸控數字鍵盤 (平板/手機最佳體驗) -->
+        <div class="quick-num-pad" onclick="event.stopPropagation()">
+          <div class="num-row">
+            <button type="button" class="btn-key" onclick="window.handleBootKeypad('1')">1</button>
+            <button type="button" class="btn-key" onclick="window.handleBootKeypad('2')">2</button>
+            <button type="button" class="btn-key" onclick="window.handleBootKeypad('3')">3</button>
+            <button type="button" class="btn-key" onclick="window.handleBootKeypad('4')">4</button>
+            <button type="button" class="btn-key" onclick="window.handleBootKeypad('5')">5</button>
+          </div>
+          <div class="num-row">
+            <button type="button" class="btn-key" onclick="window.handleBootKeypad('6')">6</button>
+            <button type="button" class="btn-key" onclick="window.handleBootKeypad('7')">7</button>
+            <button type="button" class="btn-key" onclick="window.handleBootKeypad('8')">8</button>
+            <button type="button" class="btn-key" onclick="window.handleBootKeypad('9')">9</button>
+            <button type="button" class="btn-key" onclick="window.handleBootKeypad('0')">0</button>
+          </div>
+          <div class="num-row actions">
+            <button type="button" class="btn-key backspace" onclick="window.handleBootKeypad('backspace')">⌫ 刪除</button>
+            <button type="button" class="btn-key clear" onclick="window.handleBootKeypad('clear')">重填</button>
+            <button type="button" class="btn-key unlock" onclick="window.handleBootKeypad('enter')">🔓 開門</button>
+          </div>
         </div>
       </div>
 

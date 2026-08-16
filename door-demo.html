@@ -545,14 +545,29 @@
           <div class="pin-digit" id="d4">-</div>
         </div>
 
-        <input type="password" id="pinInput" class="pin-input-real" maxlength="4" autofocus>
+        <input type="tel" inputmode="numeric" id="pinInput" class="pin-input-real" maxlength="4" autocomplete="off">
         
-        <div class="hint-text">請直接敲擊鍵盤數字或點擊下方測試</div>
+        <div class="hint-text">點擊下方數字或直接敲擊鍵盤</div>
 
-        <div style="display: flex; gap: 8px;">
-          <button class="btn-action" style="padding: 6px 14px; font-size: 0.8rem;" onclick="handleKeypad('1')">1</button>
-          <button class="btn-action" style="padding: 6px 14px; font-size: 0.8rem;" onclick="handleKeypad('8')">8</button>
-          <button class="btn-action" style="padding: 6px 14px; font-size: 0.8rem;" onclick="handleKeypad('clear')">重填</button>
+        <div style="display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 260px;">
+          <div style="display: flex; gap: 6px; justify-content: center;">
+            <button type="button" class="btn-action" style="flex:1; padding: 6px 0; font-size: 0.9rem;" onclick="handleKeypad('1')">1</button>
+            <button type="button" class="btn-action" style="flex:1; padding: 6px 0; font-size: 0.9rem;" onclick="handleKeypad('2')">2</button>
+            <button type="button" class="btn-action" style="flex:1; padding: 6px 0; font-size: 0.9rem;" onclick="handleKeypad('3')">3</button>
+            <button type="button" class="btn-action" style="flex:1; padding: 6px 0; font-size: 0.9rem;" onclick="handleKeypad('4')">4</button>
+            <button type="button" class="btn-action" style="flex:1; padding: 6px 0; font-size: 0.9rem;" onclick="handleKeypad('5')">5</button>
+          </div>
+          <div style="display: flex; gap: 6px; justify-content: center;">
+            <button type="button" class="btn-action" style="flex:1; padding: 6px 0; font-size: 0.9rem;" onclick="handleKeypad('6')">6</button>
+            <button type="button" class="btn-action" style="flex:1; padding: 6px 0; font-size: 0.9rem;" onclick="handleKeypad('7')">7</button>
+            <button type="button" class="btn-action" style="flex:1; padding: 6px 0; font-size: 0.9rem;" onclick="handleKeypad('8')">8</button>
+            <button type="button" class="btn-action" style="flex:1; padding: 6px 0; font-size: 0.9rem;" onclick="handleKeypad('9')">9</button>
+            <button type="button" class="btn-action" style="flex:1; padding: 6px 0; font-size: 0.9rem;" onclick="handleKeypad('0')">0</button>
+          </div>
+          <div style="display: flex; gap: 6px; justify-content: center;">
+            <button type="button" class="btn-action" style="flex:1; padding: 6px 0; font-size: 0.8rem; border-color: #ff5252; color: #ff9999;" onclick="handleKeypad('clear')">重填</button>
+            <button type="button" class="btn-action" style="flex:1; padding: 6px 0; font-size: 0.8rem; border-color: #3dfacb; color: #3dfacb;" onclick="handleKeypad('8888')">8888</button>
+          </div>
         </div>
       </div>
 
