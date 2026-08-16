@@ -259,19 +259,26 @@
   box-shadow: -30px 0 50px rgba(0, 0, 0, 0.7);
 }
 
-/* 門縫被厲鬼撕開狀態 (Crack Open) */
-.boot-screen.ghost-cracked .door-leaf.left {
-  transform: rotateY(-36deg);
-  box-shadow: 25px 0 45px rgba(0, 0, 0, 0.95);
-  filter: drop-shadow(0 0 25px rgba(255, 30, 39, 0.6));
-  transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
-}
+/* 門縫被厲鬼撕開狀態 (4 階逐步向外撕裂洞開) */
+.boot-screen.ghost-stage-1 .door-leaf.left { transform: rotateY(-22deg); }
+.boot-screen.ghost-stage-1 .door-leaf.right { transform: rotateY(22deg); }
 
-.boot-screen.ghost-cracked .door-leaf.right {
-  transform: rotateY(36deg);
-  box-shadow: -25px 0 45px rgba(0, 0, 0, 0.95);
-  filter: drop-shadow(0 0 25px rgba(255, 30, 39, 0.6));
-  transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
+.boot-screen.ghost-stage-2 .door-leaf.left { transform: rotateY(-42deg); }
+.boot-screen.ghost-stage-2 .door-leaf.right { transform: rotateY(42deg); }
+
+.boot-screen.ghost-stage-3 .door-leaf.left { transform: rotateY(-66deg); }
+.boot-screen.ghost-stage-3 .door-leaf.right { transform: rotateY(66deg); }
+
+.boot-screen.ghost-stage-4 .door-leaf.left { transform: rotateY(-90deg); }
+.boot-screen.ghost-stage-4 .door-leaf.right { transform: rotateY(90deg); }
+
+.boot-screen.ghost-stage-1 .seam-light,
+.boot-screen.ghost-stage-2 .seam-light,
+.boot-screen.ghost-stage-3 .seam-light,
+.boot-screen.ghost-stage-4 .seam-light {
+  opacity: 1;
+  background: #ff1e27;
+  box-shadow: 0 0 35px #ff1e27, 0 0 70px #00ff88;
 }
 
 /* 門縫微光 */
@@ -644,13 +651,12 @@ input, textarea, select {
 
 .ghost-spirit {
   position: absolute;
-  width: 80%;
-  height: 90%;
-  max-width: 580px;
+  width: 90%;
+  height: 95%;
+  max-width: 650px;
   object-fit: contain;
   border-radius: 16px;
-  mix-blend-mode: screen;
-  filter: contrast(1.6) saturate(1.8) brightness(1.3) drop-shadow(0 0 45px #ff0033) drop-shadow(0 0 75px #00ff88);
+  filter: contrast(1.4) saturate(1.6) brightness(1.2) drop-shadow(0 0 45px rgba(255, 0, 50, 0.85)) drop-shadow(0 0 90px rgba(0, 255, 136, 0.5));
   transition: transform 0.8s cubic-bezier(0.15, 0.85, 0.25, 1), filter 0.8s ease;
   animation: ghostFloat 3.5s ease-in-out infinite alternate;
 }
@@ -660,31 +666,31 @@ input, textarea, select {
   100% { transform: translateY(-18px) rotate(1.5deg); }
 }
 
-/* 4 階漸進逼近狀態 (女鬼在密碼盤後方越來越大、越來越近) */
+/* 4 階女鬼走出門的漸進逼近姿態 (頭部面孔始終在密碼盤上方或兩側清晰露出) */
 .ghost-emergence-container.stage-1 .ghost-spirit {
-  transform: scale(0.55) translateY(40px);
-  filter: contrast(1.3) brightness(1.1) drop-shadow(0 0 30px #00ff88);
+  transform: scale(0.72) translateY(-75px);
+  filter: contrast(1.3) brightness(1.15) drop-shadow(0 0 35px #00ff88);
 }
 
 .ghost-emergence-container.stage-2 .ghost-spirit {
-  transform: scale(0.85) translateY(15px);
-  filter: contrast(1.5) saturate(1.6) brightness(1.25) drop-shadow(0 0 50px #ff0033);
+  transform: scale(0.98) translateY(-40px);
+  filter: contrast(1.45) saturate(1.5) brightness(1.25) drop-shadow(0 0 55px #ff0033);
 }
 
 .ghost-emergence-container.stage-3 .ghost-spirit {
-  transform: scale(1.18) translateY(-10px);
-  filter: contrast(1.65) saturate(1.8) brightness(1.35) drop-shadow(0 0 70px red) drop-shadow(0 0 95px #00ff88);
+  transform: scale(1.28) translateY(-10px);
+  filter: contrast(1.6) saturate(1.7) brightness(1.35) drop-shadow(0 0 75px red) drop-shadow(0 0 100px #00ff88);
 }
 
 .ghost-emergence-container.stage-4 .ghost-spirit {
-  transform: scale(1.55) translateY(-25px);
-  filter: contrast(1.85) saturate(2.0) brightness(1.45) drop-shadow(0 0 95px red) drop-shadow(0 0 140px #ff0055);
+  transform: scale(1.65) translateY(-20px);
+  filter: contrast(1.8) saturate(1.9) brightness(1.45) drop-shadow(0 0 100px red) drop-shadow(0 0 150px #ff0055);
   animation: ghostFrenziedTremor 0.1s infinite alternate;
 }
 
 @keyframes ghostFrenziedTremor {
-  0% { transform: scale(1.55) translate(-5px, -22px) rotate(-1.5deg); }
-  100% { transform: scale(1.58) translate(5px, -28px) rotate(1.5deg); }
+  0% { transform: scale(1.65) translate(-6px, -24px) rotate(-1.5deg); }
+  100% { transform: scale(1.68) translate(6px, -28px) rotate(1.5deg); }
 }
 
 /* ==========================================================================

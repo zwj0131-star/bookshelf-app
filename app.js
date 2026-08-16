@@ -491,7 +491,7 @@ function initBootScreen() {
 
     playBootGateOpenSound();
 
-    bootScreen.classList.remove('ghost-cracked');
+    bootScreen.classList.remove('ghost-cracked', 'ghost-stage-1', 'ghost-stage-2', 'ghost-stage-3', 'ghost-stage-4');
     if (ghostEmergence) {
       ghostEmergence.className = 'ghost-emergence-container';
     }
@@ -521,31 +521,37 @@ function initBootScreen() {
     bootScreen.classList.add('shake-intense');
     if (bloodOverlay) bloodOverlay.classList.add('flash');
 
+    // 青銅大門 3D 向外撕裂洞開，展現女鬼跨出大門的震撼視覺
+    bootScreen.classList.remove('ghost-stage-1', 'ghost-stage-2', 'ghost-stage-3', 'ghost-stage-4');
+    if (failCount >= 1 && failCount <= 4) {
+      bootScreen.classList.add(`ghost-stage-${failCount}`);
+    }
+
     if (ghostEmergence) {
       ghostEmergence.className = `ghost-emergence-container active stage-${Math.min(failCount, 5)}`;
     }
 
     if (failCount === 1) {
       if (statusToast) {
-        statusToast.textContent = '⚠️ 密碼錯誤！紅衣女鬼在身後現身... 請再次輸入 (怨念: 1/5)';
+        statusToast.textContent = '⚠️ 青銅門撕裂！紅衣女鬼在門縫深處現身... (怨念: 1/5)';
         statusToast.style.borderColor = '#ff8800';
         statusToast.style.color = '#ffaa33';
       }
     } else if (failCount === 2) {
       if (statusToast) {
-        statusToast.textContent = '⚠️ 密碼錯誤！紅衣女鬼朝你飄近... 請再次輸入 (怨念: 2/5)';
+        statusToast.textContent = '⚠️ 門扇洞開！紅衣女鬼跨出門縫朝你逼近... (怨念: 2/5)';
         statusToast.style.borderColor = '#ff5500';
         statusToast.style.color = '#ff7733';
       }
     } else if (failCount === 3) {
       if (statusToast) {
-        statusToast.textContent = '⚠️ 密碼錯誤！她已來到身前... 快輸入密碼！(怨念: 3/5)';
+        statusToast.textContent = '⚠️ 煞氣撲面！女鬼已完全走出門外，雙爪探出！(怨念: 3/5)';
         statusToast.style.borderColor = '#ff2222';
         statusToast.style.color = '#ff4444';
       }
     } else if (failCount === 4) {
       if (statusToast) {
-        statusToast.textContent = '⚠️ 命懸一線！女鬼雙爪即將刺穿鏡頭！最後一次機會！(怨念: 4/5)';
+        statusToast.textContent = '⚠️ 命懸一線！女鬼直撲眼前狂暴注視！最後一次機會！(怨念: 4/5)';
         statusToast.style.borderColor = '#ff0033';
         statusToast.style.color = '#ff1a40';
       }
@@ -575,6 +581,7 @@ function initBootScreen() {
         const skyModal = document.getElementById('sky-abduction-modal');
         if (skyModal) skyModal.classList.remove('active');
         if (ghostEmergence) ghostEmergence.className = 'ghost-emergence-container';
+        bootScreen.classList.remove('ghost-stage-1', 'ghost-stage-2', 'ghost-stage-3', 'ghost-stage-4');
         if (bloodOverlay) bloodOverlay.classList.remove('flash');
         failCount = 0;
         currentInput = '';
