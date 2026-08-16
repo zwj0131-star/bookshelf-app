@@ -410,6 +410,28 @@ function initBootScreen() {
 
   window.handleBootKeypad = handleInput;
 
+  // 直接為所有按鍵綁定高靈敏度點擊與觸控事件
+  const numPad = document.getElementById('quick-num-pad');
+  if (numPad) {
+    numPad.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-key');
+      if (btn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const key = btn.getAttribute('data-key');
+        if (key) handleInput(key);
+      }
+    });
+
+    numPad.addEventListener('touchstart', (e) => {
+      const btn = e.target.closest('.btn-key');
+      if (btn) {
+        // 觸控即時震動回饋
+        if (navigator.vibrate) navigator.vibrate(15);
+      }
+    }, { passive: true });
+  }
+
   // 專為平板與手機提供點擊聚焦喚醒虛擬鍵盤
   window.focusBootInput = function() {
     if (bootPwdInput) {
