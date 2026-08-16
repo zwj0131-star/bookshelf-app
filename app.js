@@ -526,7 +526,7 @@ function initBootScreen() {
 
     if (failCount === 1) {
       if (statusToast) {
-        statusToast.textContent = '⚠️ 密碼錯誤！紅衣女鬼在遠端現身... 請再次輸入 (怨念: 1/5)';
+        statusToast.textContent = '⚠️ 密碼錯誤！紅衣女鬼在身後現身... 請再次輸入 (怨念: 1/5)';
         statusToast.style.borderColor = '#ff8800';
         statusToast.style.color = '#ffaa33';
       }
@@ -538,7 +538,7 @@ function initBootScreen() {
       }
     } else if (failCount === 3) {
       if (statusToast) {
-        statusToast.textContent = '⚠️ 密碼錯誤！她已來到你眼前... 快輸入密碼！(怨念: 3/5)';
+        statusToast.textContent = '⚠️ 密碼錯誤！她已來到身前... 快輸入密碼！(怨念: 3/5)';
         statusToast.style.borderColor = '#ff2222';
         statusToast.style.color = '#ff4444';
       }
@@ -549,13 +549,11 @@ function initBootScreen() {
         statusToast.style.color = '#ff1a40';
       }
     } else {
-      // 第 5 次輸錯：被女鬼狂暴抓去天上！
-      if (statusToast) {
-        statusToast.textContent = '💀 萬劫不復！你已被紅衣女鬼狂暴抓去九幽天穹！(5/5)';
-        statusToast.style.borderColor = '#ff0000';
-        statusToast.style.color = '#ff0000';
+      // 第 5 次輸錯：觸發全螢幕被女鬼狂暴抓去天上處決！
+      const skyModal = document.getElementById('sky-abduction-modal');
+      if (skyModal) {
+        skyModal.classList.add('active');
       }
-      bootScreen.classList.add('dragged-up');
     }
 
     setTimeout(() => {
@@ -573,7 +571,8 @@ function initBootScreen() {
     } else {
       // 第 5 次昇天處決後重生重置
       setTimeout(() => {
-        bootScreen.classList.remove('dragged-up');
+        const skyModal = document.getElementById('sky-abduction-modal');
+        if (skyModal) skyModal.classList.remove('active');
         if (ghostEmergence) ghostEmergence.className = 'ghost-emergence-container';
         if (bloodOverlay) bloodOverlay.classList.remove('flash');
         failCount = 0;
@@ -585,7 +584,7 @@ function initBootScreen() {
           statusToast.style.color = '#e0e0e0';
         }
         isJumpscaring = false;
-      }, 3200);
+      }, 3500);
     }
   }
 

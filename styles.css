@@ -616,17 +616,17 @@ input, textarea, select {
   touch-action: auto !important;
 }
 
-/* 突發極限驚悚 紅衣女鬼層 (在青銅門裂隙深處，位於鎖盤後方) */
+/* 突發極限驚悚 紅衣女鬼層 (位於青銅門前側、密碼盤後方，全身清晰可見) */
 .ghost-emergence-container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
-  max-width: 1100px;
-  max-height: 850px;
-  z-index: 15 !important;
+  width: 100vw;
+  height: 100vh;
+  max-width: 900px;
+  max-height: 900px;
+  z-index: 60 !important;
   pointer-events: none;
   display: flex;
   justify-content: center;
@@ -634,7 +634,7 @@ input, textarea, select {
   overflow: visible;
   opacity: 0;
   visibility: hidden;
-  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: opacity 0.5s ease, visibility 0.5s ease;
 }
 
 .ghost-emergence-container.active {
@@ -644,85 +644,204 @@ input, textarea, select {
 
 .ghost-spirit {
   position: absolute;
-  width: 85%;
-  height: 95%;
-  max-width: 600px;
+  width: 80%;
+  height: 90%;
+  max-width: 580px;
   object-fit: contain;
-  border-radius: 12px;
+  border-radius: 16px;
   mix-blend-mode: screen;
-  filter: contrast(1.5) saturate(1.7) brightness(1.25) drop-shadow(0 0 50px #ff0033) drop-shadow(0 0 80px #00ff88);
+  filter: contrast(1.6) saturate(1.8) brightness(1.3) drop-shadow(0 0 45px #ff0033) drop-shadow(0 0 75px #00ff88);
   transition: transform 0.8s cubic-bezier(0.15, 0.85, 0.25, 1), filter 0.8s ease;
   animation: ghostFloat 3.5s ease-in-out infinite alternate;
 }
 
 @keyframes ghostFloat {
   0% { transform: translateY(0px) rotate(-1deg); }
-  100% { transform: translateY(-16px) rotate(1.5deg); }
+  100% { transform: translateY(-18px) rotate(1.5deg); }
 }
 
-/* 5 階逼近狀態 */
+/* 4 階漸進逼近狀態 (女鬼在密碼盤後方越來越大、越來越近) */
 .ghost-emergence-container.stage-1 .ghost-spirit {
-  transform: scale(0.42) translateY(30px);
-  filter: contrast(1.3) brightness(1.0) drop-shadow(0 0 25px #00ff88);
+  transform: scale(0.55) translateY(40px);
+  filter: contrast(1.3) brightness(1.1) drop-shadow(0 0 30px #00ff88);
 }
 
 .ghost-emergence-container.stage-2 .ghost-spirit {
-  transform: scale(0.68) translateY(10px);
-  filter: contrast(1.45) saturate(1.5) brightness(1.2) drop-shadow(0 0 45px #ff0044);
+  transform: scale(0.85) translateY(15px);
+  filter: contrast(1.5) saturate(1.6) brightness(1.25) drop-shadow(0 0 50px #ff0033);
 }
 
 .ghost-emergence-container.stage-3 .ghost-spirit {
-  transform: scale(1.02) translateY(-5px);
-  filter: contrast(1.6) saturate(1.7) brightness(1.3) drop-shadow(0 0 65px red) drop-shadow(0 0 90px #00ff88);
+  transform: scale(1.18) translateY(-10px);
+  filter: contrast(1.65) saturate(1.8) brightness(1.35) drop-shadow(0 0 70px red) drop-shadow(0 0 95px #00ff88);
 }
 
 .ghost-emergence-container.stage-4 .ghost-spirit {
-  transform: scale(1.45) translateY(-20px);
-  filter: contrast(1.8) saturate(1.9) brightness(1.4) drop-shadow(0 0 90px red) drop-shadow(0 0 130px #ff0055);
+  transform: scale(1.55) translateY(-25px);
+  filter: contrast(1.85) saturate(2.0) brightness(1.45) drop-shadow(0 0 95px red) drop-shadow(0 0 140px #ff0055);
   animation: ghostFrenziedTremor 0.1s infinite alternate;
 }
 
 @keyframes ghostFrenziedTremor {
-  0% { transform: scale(1.45) translate(-4px, -18px) rotate(-1deg); }
-  100% { transform: scale(1.48) translate(4px, -22px) rotate(1deg); }
+  0% { transform: scale(1.55) translate(-5px, -22px) rotate(-1.5deg); }
+  100% { transform: scale(1.58) translate(5px, -28px) rotate(1.5deg); }
 }
 
-/* 第 5 次輸錯：被女鬼狂暴抓去天上！ */
-.ghost-emergence-container.stage-5 .ghost-spirit {
-  animation: ghostDragToSkyBurst 3s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+/* ==========================================================================
+   第 5 次輸錯：終極震撼【被紅衣女鬼狂暴抓去天上】電影級處決層
+   ========================================================================== */
+.sky-abduction-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 999999 !important;
+  background: radial-gradient(circle at center, rgba(80, 0, 10, 0.95) 0%, rgba(10, 0, 5, 0.98) 60%, #000 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
-@keyframes ghostDragToSkyBurst {
+.sky-abduction-modal.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* 高速向下倒退的幽冥流速線 (營造極速沖天飛升超重感) */
+.sky-speed-lines {
+  position: absolute;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 40px,
+    rgba(255, 0, 50, 0.4) 42px,
+    transparent 46px
+  );
+  animation: speedLinesDown 0.15s linear infinite;
+  opacity: 0.8;
+  mix-blend-mode: screen;
+}
+
+@keyframes speedLinesDown {
+  from { transform: translateY(-100px); }
+  to { transform: translateY(100px); }
+}
+
+/* 女鬼抓人沖天動畫 (貼臉直撲 -> 狂暴拽上天空) */
+.sky-ghost-attacker {
+  position: absolute;
+  width: 90vw;
+  max-width: 750px;
+  height: 90vh;
+  object-fit: contain;
+  mix-blend-mode: screen;
+  filter: contrast(2.0) saturate(2.0) brightness(1.6) drop-shadow(0 0 80px red) drop-shadow(0 0 150px #ff0055);
+}
+
+.sky-abduction-modal.active .sky-ghost-attacker {
+  animation: skyGhostGrabAndFly 3.4s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+@keyframes skyGhostGrabAndFly {
   0% {
-    transform: scale(1.45) translateY(-20px);
-    opacity: 1;
+    transform: scale(0.6) translateY(200px) rotate(0deg);
+    opacity: 0;
   }
-  20% {
-    transform: scale(2.6) translateY(-40px);
-    filter: contrast(2.2) brightness(2) drop-shadow(0 0 120px red) drop-shadow(0 0 180px #000);
+  15% {
+    transform: scale(2.4) translateY(20px) rotate(-4deg);
     opacity: 1;
+    filter: contrast(2.4) brightness(2.2) drop-shadow(0 0 120px red);
   }
-  50% {
-    transform: scale(2.8) translateY(-120px) rotate(-8deg);
+  35% {
+    transform: scale(2.6) translateY(-60px) rotate(3deg);
+  }
+  60% {
+    transform: scale(1.6) translateY(-80vh) rotate(-15deg);
     opacity: 0.95;
   }
   100% {
-    transform: scale(0.2) translateY(-180vh) rotate(-35deg);
+    transform: scale(0.1) translateY(-220vh) rotate(-45deg);
     opacity: 0;
-    filter: blur(25px);
+    filter: blur(30px);
   }
 }
 
-/* 整座青銅巨門與玩家視角被狂暴拖拽抓上天空 */
-.boot-screen.dragged-up {
-  animation: screenDraggedUpToSky 3s cubic-bezier(0.15, 0.85, 0.2, 1) forwards;
+/* 處決血色恐怖文字 */
+.sky-terror-text {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+  animation: textGlitchPound 0.2s infinite alternate;
 }
 
-@keyframes screenDraggedUpToSky {
-  0% { transform: scale(1) translateY(0) rotate(0); }
-  25% { transform: scale(1.15) translateY(20px) rotate(3deg); }
-  60% { transform: scale(0.6) translateY(-140vh) rotate(-25deg); filter: brightness(0.2) blur(8px); }
-  100% { transform: scale(0.1) translateY(-260vh) rotate(-45deg); opacity: 0; filter: brightness(0) blur(20px); }
+.sky-title {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #ff1e27;
+  letter-spacing: 12px;
+  text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0055, 0 4px 10px #000;
+  margin-bottom: 8px;
+}
+
+.sky-sub {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff0f0;
+  letter-spacing: 4px;
+  text-shadow: 0 0 10px #ff0000, 0 2px 6px #000;
+}
+
+@keyframes textGlitchPound {
+  0% { transform: translateX(-50%) scale(0.98); }
+  100% { transform: translateX(-50%) scale(1.03); }
+}
+
+/* 血色驚悚狂暴閃爍遮罩 */
+.blood-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle, rgba(255, 0, 0, 0.8) 0%, rgba(120, 0, 0, 0.95) 60%, #000 100%);
+  mix-blend-mode: hard-light;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 150;
+}
+
+.blood-overlay.flash {
+  animation: bloodTerrorFlash 1.8s ease-out forwards;
+}
+
+@keyframes bloodTerrorFlash {
+  0%, 15%, 35%, 55% { opacity: 0.95; filter: contrast(2); }
+  8%, 25%, 45% { opacity: 0.2; }
+  75% { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+
+/* 劇烈大地震狂暴震顫動畫 */
+.boot-screen.shake-intense {
+  animation: bootExtremeShake 0.85s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes bootExtremeShake {
+  10%, 90% { transform: translate3d(-18px, 12px, 0) rotate(-3.5deg) scale(1.03); }
+  20%, 80% { transform: translate3d(20px, -15px, 0) rotate(4deg) scale(0.98); }
+  30%, 50%, 70% { transform: translate3d(-25px, 18px, 0) rotate(-4.5deg) scale(1.04); }
+  40%, 60% { transform: translate3d(24px, -18px, 0) rotate(4.5deg) scale(0.97); }
 }
 
 /* 血色驚悚狂暴閃爍遮罩 */
