@@ -162,41 +162,6 @@ function handleFirstUserMusicStart() {
 document.addEventListener('click', handleFirstUserMusicStart, { once: true });
 document.addEventListener('keydown', handleFirstUserMusicStart, { once: true });
 
-function updateSuonaBtnUI(playing) {
-  const bootIcon = document.getElementById('boot-suona-icon');
-  const bootText = document.getElementById('boot-suona-text');
-  const headerText = document.getElementById('header-suona-text');
-  const btnSuona = document.getElementById('btn-suona-toggle');
-  const lyricsContainer = document.getElementById('suona-lyrics-container');
-
-  const text = playing ? '嗩吶神曲: 演奏中' : '嗩吶神曲: 已靜音';
-  if (bootText) bootText.textContent = text;
-  if (headerText) headerText.textContent = playing ? '嗩吶神曲伴奏' : '嗩吶已靜音';
-
-  if (bootIcon) {
-    bootIcon.textContent = playing ? '🎺' : '🔇';
-  }
-  if (btnSuona) {
-    btnSuona.style.borderColor = playing ? 'var(--accent-color)' : 'var(--border-color)';
-    btnSuona.style.color = playing ? 'var(--accent-color)' : 'var(--text-muted)';
-  }
-  if (lyricsContainer) {
-    lyricsContainer.style.opacity = playing ? '1' : '0.4';
-  }
-}
-
-// 首次使用者點擊/按鍵時自動啟動嗩吶古風神曲
-let firstUserInteraction = false;
-function handleFirstUserMusicStart() {
-  if (firstUserInteraction) return;
-  firstUserInteraction = true;
-  if (!isSuonaPlaying) {
-    startSuonaBGM();
-  }
-}
-document.addEventListener('click', handleFirstUserMusicStart, { once: true });
-document.addEventListener('keydown', handleFirstUserMusicStart, { once: true });
-
 // ==========================================================================
 // 3D 古老青銅門機關與厲鬼破門 (Boot Screen Module)
 // ==========================================================================
