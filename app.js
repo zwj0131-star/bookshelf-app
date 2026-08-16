@@ -368,8 +368,10 @@ function initBootScreen() {
   }
 
   let lastInputTime = 0;
+  let isAscendingToSky = false;
+
   function handleInput(char) {
-    if (isOpening || isJumpscaring) return;
+    if (isOpening || isAscendingToSky) return;
     
     // 任何按鍵互動立即喚醒音樂播放
     ensureMusicPlaying();
@@ -504,8 +506,7 @@ function initBootScreen() {
   }
 
   function triggerFail() {
-    if (isJumpscaring) return;
-    isJumpscaring = true;
+    if (isAscendingToSky || isOpening) return;
     failCount++;
 
     const lockMech = document.getElementById('lock-mechanism');
@@ -550,6 +551,7 @@ function initBootScreen() {
       }
     } else {
       // 第 5 次輸錯：觸發全螢幕被女鬼狂暴抓去天上處決！
+      isAscendingToSky = true;
       const skyModal = document.getElementById('sky-abduction-modal');
       if (skyModal) {
         skyModal.classList.add('active');
@@ -561,12 +563,11 @@ function initBootScreen() {
     }, 700);
 
     if (failCount < 5) {
-      // 0.4 秒後立即清空並開放密碼輸入！密碼盤永遠可見可按！
+      // 即時清空輸入並更新顯示，隨時可按數字鍵！
+      currentInput = '';
+      updateDisplay();
       setTimeout(() => {
         if (bloodOverlay) bloodOverlay.classList.remove('flash');
-        currentInput = '';
-        updateDisplay();
-        isJumpscaring = false;
       }, 400);
     } else {
       // 第 5 次昇天處決後重生重置
@@ -583,7 +584,7 @@ function initBootScreen() {
           statusToast.style.borderColor = '#d4af37';
           statusToast.style.color = '#e0e0e0';
         }
-        isJumpscaring = false;
+        isAscendingToSky = false;
       }, 3500);
     }
   }
