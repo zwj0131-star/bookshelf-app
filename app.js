@@ -475,6 +475,8 @@ function initBootScreen() {
     }
   }
 
+  let failCount = 0;
+
   function triggerSuccess() {
     if (isOpening) return;
     isOpening = true;
@@ -488,7 +490,9 @@ function initBootScreen() {
     playBootGateOpenSound();
 
     bootScreen.classList.remove('ghost-cracked');
-    if (ghostEmergence) ghostEmergence.classList.remove('active');
+    if (ghostEmergence) {
+      ghostEmergence.className = 'ghost-emergence-container';
+    }
     bootScreen.classList.add('opening');
 
     setTimeout(() => {
@@ -502,36 +506,82 @@ function initBootScreen() {
   function triggerFail() {
     if (isJumpscaring) return;
     isJumpscaring = true;
-
-    if (statusToast) {
-      statusToast.textContent = '⚠️ 封印暴走！青銅門裂開，千年怨靈衝出！';
-      statusToast.style.borderColor = '#ff3b30';
-      statusToast.style.color = '#ff3b30';
-    }
+    failCount++;
 
     playBootGhostScreamSound();
-
     bootScreen.classList.add('ghost-cracked');
-    if (ghostEmergence) ghostEmergence.classList.add('active');
     bootScreen.classList.add('shake-intense');
     if (bloodOverlay) bloodOverlay.classList.add('flash');
 
-    setTimeout(() => {
-      bootScreen.classList.remove('shake-intense');
-    }, 750);
+    if (ghostEmergence) {
+      ghostEmergence.className = `ghost-emergence-container active stage-${Math.min(failCount, 5)}`;
+    }
+
+    if (failCount === 1) {
+      if (statusToast) {
+        statusToast.textContent = '⚠️ 封印鬆動！紅衣女鬼在遠端現身... (怨念: 1/5)';
+        statusToast.style.borderColor = '#ff8800';
+        statusToast.style.color = '#ffaa33';
+      }
+    } else if (failCount === 2) {
+      if (statusToast) {
+        statusToast.textContent = '⚠️ 怨氣逼近！紅衣女鬼朝你飄來... (怨念: 2/5)';
+        statusToast.style.borderColor = '#ff5500';
+        statusToast.style.color = '#ff7733';
+      }
+    } else if (failCount === 3) {
+      if (statusToast) {
+        statusToast.textContent = '⚠️ 煞氣撲面！她已經來到你眼前！(怨念: 3/5)';
+        statusToast.style.borderColor = '#ff2222';
+        statusToast.style.color = '#ff4444';
+      }
+    } else if (failCount === 4) {
+      if (statusToast) {
+        statusToast.textContent = '⚠️ 命懸一線！女鬼雙爪已扣住你的咽喉！(怨念: 4/5)';
+        statusToast.style.borderColor = '#ff0033';
+        statusToast.style.color = '#ff1a40';
+      }
+    } else {
+      // 第 5 次輸錯：被女鬼狂暴抓去天上！
+      if (statusToast) {
+        statusToast.textContent = '💀 萬劫不復！你已被紅衣女鬼狂暴抓去九幽天穹！(5/5)';
+        statusToast.style.borderColor = '#ff0000';
+        statusToast.style.color = '#ff0000';
+      }
+      bootScreen.classList.add('dragged-up');
+    }
 
     setTimeout(() => {
-      if (ghostEmergence) ghostEmergence.classList.remove('active');
-      bootScreen.classList.remove('ghost-cracked');
-      playBootGateSlamSound();
-      if (bloodOverlay) bloodOverlay.classList.remove('flash');
-      currentInput = '';
-      updateDisplay();
-      if (statusToast) {
-        statusToast.textContent = '💀 厲鬼遁回門內，青銅門緊閉！請重新嘗試。';
-      }
-      isJumpscaring = false;
-    }, 1900);
+      bootScreen.classList.remove('shake-intense');
+    }, 850);
+
+    if (failCount < 5) {
+      setTimeout(() => {
+        bootScreen.classList.remove('ghost-cracked');
+        playBootGateSlamSound();
+        if (bloodOverlay) bloodOverlay.classList.remove('flash');
+        currentInput = '';
+        updateDisplay();
+        isJumpscaring = false;
+      }, 1600);
+    } else {
+      // 第 5 次昇天處決後重生重置
+      setTimeout(() => {
+        bootScreen.classList.remove('dragged-up');
+        bootScreen.classList.remove('ghost-cracked');
+        if (ghostEmergence) ghostEmergence.className = 'ghost-emergence-container';
+        if (bloodOverlay) bloodOverlay.classList.remove('flash');
+        failCount = 0;
+        currentInput = '';
+        updateDisplay();
+        if (statusToast) {
+          statusToast.textContent = '📜 魂魄重聚歸來，青銅巨門封印重置！(請輸入 520945)';
+          statusToast.style.borderColor = '#d4af37';
+          statusToast.style.color = '#e0e0e0';
+        }
+        isJumpscaring = false;
+      }, 3400);
+    }
   }
 
   // 實體鍵盤與觸控按鍵全域監聽
