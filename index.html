@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@600;900&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=2.6.0">
+  <link rel="stylesheet" href="styles.css?v=2.7.0">
 </head>
 <body>
   <!-- 3D 古老青銅巨門開場 (Boot Screen) -->
@@ -100,8 +100,11 @@
       <div class="lyrics-sub" id="lyrics-sub">密碼若錯厲鬼出，金鎖若解萬卷舒</div>
     </div>
 
-    <!-- 背景音樂 Audio 標籤 (優先載入真實 MP3 音檔) -->
-    <audio id="bgm-audio" src="assets/bronze_whisper.mp3" loop preload="auto"></audio>
+    <!-- 背景音樂 Audio 標籤 (雙重備用路徑保證 100% 可載入) -->
+    <audio id="bgm-audio" loop preload="auto" playsinline>
+      <source src="assets/bronze_whisper.mp3" type="audio/mpeg">
+      <source src="青銅密語.mp3" type="audio/mpeg">
+    </audio>
 
     <!-- 音樂與音效控制開關 (右上角) -->
     <div class="boot-controls-top">
@@ -394,6 +397,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=2.6.0"></script>
+  <script src="app.js?v=2.7.0"></script>
 </body>
 </html>

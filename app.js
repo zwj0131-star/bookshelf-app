@@ -29,6 +29,7 @@ const sortBy = document.getElementById('sort-by');
 // 初始化應用程式
 function initApp() {
   initBootScreen();
+  cycleLyrics(); // 頁面一開立即啟動歌詞字幕輪播！
   loadBooksFromStorage();
   setupEventListeners();
   renderApp();
@@ -61,29 +62,34 @@ function getBgmAudio() {
   return document.getElementById('bgm-audio');
 }
 
-// 動態歌詞滾動更新
+// 動態歌詞獨立循環滾動 (頁面一開立即自動滾動)
 function cycleLyrics() {
-  if (!isMusicPlaying) return;
-
   const mainEl = document.getElementById('lyrics-main');
   const subEl = document.getElementById('lyrics-sub');
 
   if (mainEl && subEl) {
     const item = ANCIENT_LYRICS[currentLyricIdx];
     mainEl.style.opacity = '0';
-    mainEl.style.transform = 'scale(0.9)';
+    mainEl.style.transform = 'scale(0.92)';
 
     setTimeout(() => {
       mainEl.textContent = item.main;
       subEl.textContent = item.sub;
       mainEl.style.opacity = '1';
       mainEl.style.transform = 'scale(1.03)';
-    }, 250);
+    }, 280);
 
     currentLyricIdx = (currentLyricIdx + 1) % ANCIENT_LYRICS.length;
   }
 
-  lyricsTimer = setTimeout(cycleLyrics, 5000);
+  clearTimeout(lyricsTimer);
+  lyricsTimer = setTimeout(cycleLyrics, 4500);
+}
+
+// 確保音樂播放
+function ensureMusicPlaying() {
+  if (isMusicPlaying) return;
+  startMusicPlayback();
 }
 
 function startMusicPlayback() {
@@ -91,16 +97,17 @@ function startMusicPlayback() {
   isMusicPlaying = true;
 
   if (audio) {
-    audio.volume = 0.65;
-    audio.play().then(() => {
-      updateMusicBtnUI(true);
-    }).catch(err => {
-      console.warn('MP3 自動播放需使用者互動:', err);
-      updateMusicBtnUI(false);
-    });
+    audio.volume = 0.7;
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        updateMusicBtnUI(true);
+      }).catch(err => {
+        console.log('音訊播放等待使用者點擊:', err);
+      });
+    }
   }
 
-  cycleLyrics();
   updateMusicBtnUI(true);
 }
 
@@ -111,7 +118,6 @@ function stopMusicPlayback() {
   if (audio) {
     audio.pause();
   }
-  clearTimeout(lyricsTimer);
   updateMusicBtnUI(false);
 }
 
@@ -146,21 +152,16 @@ function updateMusicBtnUI(playing) {
     btnSuona.style.color = playing ? 'var(--accent-color)' : 'var(--text-muted)';
   }
   if (lyricsContainer) {
-    lyricsContainer.style.opacity = playing ? '1' : '0.35';
+    lyricsContainer.style.opacity = '1';
   }
 }
 
-// 首次使用者點擊/按鍵時自動啟動《青銅密語》
-let firstUserInteraction = false;
-function handleFirstUserMusicStart() {
-  if (firstUserInteraction) return;
-  firstUserInteraction = true;
-  if (!isMusicPlaying) {
-    startMusicPlayback();
-  }
-}
-document.addEventListener('click', handleFirstUserMusicStart, { once: true });
-document.addEventListener('keydown', handleFirstUserMusicStart, { once: true });
+// 首次使用者點擊/按鍵/觸控時自動啟動《青銅密語》
+['click', 'touchstart', 'keydown'].forEach(evtType => {
+  document.addEventListener(evtType, () => {
+    ensureMusicPlaying();
+  }, { once: true, passive: true });
+});
 
 // ==========================================================================
 // 3D 古老青銅門機關與厲鬼破門 (Boot Screen Module)
@@ -356,6 +357,9 @@ function initBootScreen() {
   let lastInputTime = 0;
   function handleInput(char) {
     if (isOpening || isJumpscaring) return;
+    
+    // 任何按鍵互動立即喚醒音樂播放
+    ensureMusicPlaying();
     
     // 防重複過快連擊 (50ms)
     const now = Date.now();
