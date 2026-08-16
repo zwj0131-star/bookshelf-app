@@ -342,12 +342,27 @@
   pointer-events: none;
 }
 
-/* 厲鬼衝出時，鎖盤完全隱藏消失 */
-.boot-screen.ghost-cracked .lock-mechanism {
+/* 輸錯時鎖盤紅光震動警示，但保持清晰可見與即時可點擊 */
+.lock-mechanism.error-shake {
+  animation: lockErrorShake 0.45s cubic-bezier(.36,.07,.19,.97) both;
+  border-color: #ff3b30 !important;
+  box-shadow: 0 0 45px rgba(255, 59, 48, 0.8), inset 0 0 25px rgba(255, 59, 48, 0.6) !important;
+}
+
+@keyframes lockErrorShake {
+  10%, 90% { transform: translate(-54%, -50%) rotate(-1.5deg); }
+  20%, 80% { transform: translate(-46%, -50%) rotate(2deg); }
+  30%, 50%, 70% { transform: translate(-56%, -50%) rotate(-2deg); }
+  40%, 60% { transform: translate(-44%, -50%) rotate(2deg); }
+  100% { transform: translate(-50%, -50%) rotate(0deg); }
+}
+
+/* 只有第 5 次被抓去天上時，鎖盤才隨視角狂暴升天 */
+.boot-screen.dragged-up .lock-mechanism {
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.3);
+  transform: translate(-50%, -50%) scale(0.1) translateY(-180vh) rotate(-35deg);
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: all 2.5s cubic-bezier(0.1, 0.9, 0.2, 1);
 }
 
 /* 外圈同心符文旋轉環 (超清晰向量雙環) */
