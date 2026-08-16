@@ -271,47 +271,58 @@ function playBootGateSlamSound() {
 
 function playBootGhostScreamSound() {
   if (!bootAudioEnabled) return;
-  initBootAudio();
   try {
-    const carrier = bootAudioCtx.createOscillator();
-    const modulator = bootAudioCtx.createOscillator();
-    const modGain = bootAudioCtx.createGain();
-    const mainGain = bootAudioCtx.createGain();
+    initBootAudio();
+    if (bootAudioCtx.state === 'suspended') bootAudioCtx.resume();
 
-    carrier.type = 'sawtooth';
-    carrier.frequency.setValueAtTime(450, bootAudioCtx.currentTime);
-    carrier.frequency.exponentialRampToValueAtTime(1400, bootAudioCtx.currentTime + 0.3);
-    carrier.frequency.exponentialRampToValueAtTime(220, bootAudioCtx.currentTime + 1.6);
+    // 觸控螢幕強烈爆發震動
+    if (navigator.vibrate) {
+      navigator.vibrate([150, 50, 200, 60, 400, 80, 550]);
+    }
 
-    modulator.type = 'square';
-    modulator.frequency.setValueAtTime(50, bootAudioCtx.currentTime);
-    modGain.gain.setValueAtTime(350, bootAudioCtx.currentTime);
+    // 厲鬼淒厲破空尖嘯 (Pierced Banshee Scream)
+    const screamOsc = bootAudioCtx.createOscillator();
+    const screamGain = bootAudioCtx.createGain();
+    const screamMod = bootAudioCtx.createOscillator();
+    const screamModGain = bootAudioCtx.createGain();
 
-    modulator.connect(modGain);
-    modGain.connect(carrier.frequency);
+    screamOsc.type = 'sawtooth';
+    screamOsc.frequency.setValueAtTime(800, bootAudioCtx.currentTime);
+    screamOsc.frequency.exponentialRampToValueAtTime(3200, bootAudioCtx.currentTime + 0.25);
+    screamOsc.frequency.exponentialRampToValueAtTime(1400, bootAudioCtx.currentTime + 0.8);
+    screamOsc.frequency.exponentialRampToValueAtTime(280, bootAudioCtx.currentTime + 1.85);
 
-    mainGain.gain.setValueAtTime(0.85, bootAudioCtx.currentTime);
-    mainGain.gain.exponentialRampToValueAtTime(0.01, bootAudioCtx.currentTime + 1.7);
+    screamMod.type = 'sawtooth';
+    screamMod.frequency.setValueAtTime(75, bootAudioCtx.currentTime);
+    screamModGain.gain.setValueAtTime(650, bootAudioCtx.currentTime);
 
-    carrier.connect(mainGain);
-    mainGain.connect(bootAudioCtx.destination);
+    screamMod.connect(screamModGain);
+    screamModGain.connect(screamOsc.frequency);
 
-    modulator.start();
-    carrier.start();
-    modulator.stop(bootAudioCtx.currentTime + 1.7);
-    carrier.stop(bootAudioCtx.currentTime + 1.7);
+    screamGain.gain.setValueAtTime(0.95, bootAudioCtx.currentTime);
+    screamGain.gain.exponentialRampToValueAtTime(0.005, bootAudioCtx.currentTime + 1.85);
 
-    const oscLow = bootAudioCtx.createOscillator();
-    const gainLow = bootAudioCtx.createGain();
-    oscLow.type = 'sine';
-    oscLow.frequency.setValueAtTime(200, bootAudioCtx.currentTime);
-    oscLow.frequency.exponentialRampToValueAtTime(35, bootAudioCtx.currentTime + 0.7);
-    gainLow.gain.setValueAtTime(0.9, bootAudioCtx.currentTime);
-    gainLow.gain.exponentialRampToValueAtTime(0.01, bootAudioCtx.currentTime + 0.7);
-    oscLow.connect(gainLow);
-    gainLow.connect(bootAudioCtx.destination);
-    oscLow.start();
-    oscLow.stop(bootAudioCtx.currentTime + 0.7);
+    screamOsc.connect(screamGain);
+    screamGain.connect(bootAudioCtx.destination);
+
+    screamMod.start();
+    screamOsc.start();
+    screamMod.stop(bootAudioCtx.currentTime + 1.85);
+    screamOsc.stop(bootAudioCtx.currentTime + 1.85);
+
+    // 幽冥低頻狂暴惡靈咆哮 (Demonic Sub-Rumble)
+    const rumbleOsc = bootAudioCtx.createOscillator();
+    const rumbleGain = bootAudioCtx.createGain();
+    rumbleOsc.type = 'sawtooth';
+    rumbleOsc.frequency.setValueAtTime(160, bootAudioCtx.currentTime);
+    rumbleOsc.frequency.exponentialRampToValueAtTime(32, bootAudioCtx.currentTime + 1.2);
+    rumbleGain.gain.setValueAtTime(1.0, bootAudioCtx.currentTime);
+    rumbleGain.gain.exponentialRampToValueAtTime(0.01, bootAudioCtx.currentTime + 1.2);
+
+    rumbleOsc.connect(rumbleGain);
+    rumbleGain.connect(bootAudioCtx.destination);
+    rumbleOsc.start();
+    rumbleOsc.stop(bootAudioCtx.currentTime + 1.2);
   } catch (e) { console.warn(e); }
 }
 
