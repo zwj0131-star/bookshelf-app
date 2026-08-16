@@ -333,19 +333,21 @@ function initBootScreen() {
       const el = document.getElementById('pd' + i);
       if (!el) continue;
       if (i <= currentInput.length) {
-        // ✨ 直接顯現具體輸入的數字 (金色大字 + 符文金光)
+        // ✨ 極致 4K 金光雕刻數字
         el.textContent = currentInput[i - 1];
-        el.style.color = '#fffbe6';
-        el.style.borderColor = '#d4af37';
-        el.style.background = 'rgba(25, 45, 36, 0.95)';
-        el.style.boxShadow = '0 0 15px rgba(212, 175, 55, 0.75), inset 0 0 10px rgba(212, 175, 55, 0.4)';
-        el.style.transform = 'scale(1.08)';
+        el.style.color = '#ffffff';
+        el.style.borderColor = '#ffd700';
+        el.style.background = 'linear-gradient(180deg, #2b5547 0%, #152d25 100%)';
+        el.style.boxShadow = '0 0 16px rgba(255, 215, 0, 0.8), inset 0 1px 3px rgba(255, 255, 255, 0.6)';
+        el.style.textShadow = '0 2px 4px rgba(0, 0, 0, 0.9), 0 0 10px #ffd700';
+        el.style.transform = 'scale(1.06)';
       } else {
         el.textContent = '-';
-        el.style.color = 'rgba(61, 250, 203, 0.45)';
-        el.style.borderColor = 'rgba(61, 250, 203, 0.3)';
-        el.style.background = 'rgba(0, 0, 0, 0.85)';
-        el.style.boxShadow = 'none';
+        el.style.color = 'rgba(61, 250, 203, 0.5)';
+        el.style.borderColor = 'rgba(61, 250, 203, 0.35)';
+        el.style.background = 'linear-gradient(180deg, #11221b 0%, #060e0b 100%)';
+        el.style.boxShadow = 'inset 0 1px 3px rgba(255, 255, 255, 0.1), inset 0 0 10px rgba(0, 0, 0, 0.9)';
+        el.style.textShadow = 'none';
         el.style.transform = 'scale(1)';
       }
     }
