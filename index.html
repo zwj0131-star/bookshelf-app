@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@600;900&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=2.5.0">
 </head>
 <body>
   <!-- 3D 古老青銅巨門開場 (Boot Screen) -->
@@ -63,23 +63,23 @@
         <!-- 完整的 0-9 符文觸控數字鍵盤 -->
         <div class="quick-num-pad" id="quick-num-pad">
           <div class="num-row">
-            <button type="button" class="btn-key" data-key="1">1</button>
-            <button type="button" class="btn-key" data-key="2">2</button>
-            <button type="button" class="btn-key" data-key="3">3</button>
-            <button type="button" class="btn-key" data-key="4">4</button>
-            <button type="button" class="btn-key" data-key="5">5</button>
+            <button type="button" class="btn-key" data-key="1" onclick="window.handleBootKeypad('1')">1</button>
+            <button type="button" class="btn-key" data-key="2" onclick="window.handleBootKeypad('2')">2</button>
+            <button type="button" class="btn-key" data-key="3" onclick="window.handleBootKeypad('3')">3</button>
+            <button type="button" class="btn-key" data-key="4" onclick="window.handleBootKeypad('4')">4</button>
+            <button type="button" class="btn-key" data-key="5" onclick="window.handleBootKeypad('5')">5</button>
           </div>
           <div class="num-row">
-            <button type="button" class="btn-key" data-key="6">6</button>
-            <button type="button" class="btn-key" data-key="7">7</button>
-            <button type="button" class="btn-key" data-key="8">8</button>
-            <button type="button" class="btn-key" data-key="9">9</button>
-            <button type="button" class="btn-key" data-key="0">0</button>
+            <button type="button" class="btn-key" data-key="6" onclick="window.handleBootKeypad('6')">6</button>
+            <button type="button" class="btn-key" data-key="7" onclick="window.handleBootKeypad('7')">7</button>
+            <button type="button" class="btn-key" data-key="8" onclick="window.handleBootKeypad('8')">8</button>
+            <button type="button" class="btn-key" data-key="9" onclick="window.handleBootKeypad('9')">9</button>
+            <button type="button" class="btn-key" data-key="0" onclick="window.handleBootKeypad('0')">0</button>
           </div>
           <div class="num-row actions">
-            <button type="button" class="btn-key backspace" data-key="backspace">⌫ 刪除</button>
-            <button type="button" class="btn-key clear" data-key="clear">重填</button>
-            <button type="button" class="btn-key unlock" data-key="enter">🔓 開門</button>
+            <button type="button" class="btn-key backspace" data-key="backspace" onclick="window.handleBootKeypad('backspace')">⌫ 刪除</button>
+            <button type="button" class="btn-key clear" data-key="clear" onclick="window.handleBootKeypad('clear')">重填</button>
+            <button type="button" class="btn-key unlock" data-key="enter" onclick="window.handleBootKeypad('enter')">🔓 開門</button>
           </div>
         </div>
       </div>
@@ -394,6 +394,6 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=2.5.0"></script>
 </body>
 </html>

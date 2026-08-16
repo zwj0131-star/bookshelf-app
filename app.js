@@ -34,6 +34,13 @@ function initApp() {
   renderApp();
 }
 
+// 預先掛載全域處理函數防止載入延遲
+window.handleBootKeypad = function(char) {
+  if (window._handleBootInputReal) {
+    window._handleBootInputReal(char);
+  }
+};
+
 // ==========================================================================
 // 🎵 專屬神曲《青銅密語》音訊播放與動態歌詞引擎
 // ==========================================================================
@@ -422,6 +429,7 @@ function initBootScreen() {
   }
 
   window.handleBootKeypad = handleInput;
+  window._handleBootInputReal = handleInput;
 
   // 為所有按鍵綁定點擊與觸控
   const numPad = document.getElementById('quick-num-pad');
