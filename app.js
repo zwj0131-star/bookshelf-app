@@ -360,23 +360,36 @@ function initBootScreen() {
       const el = document.getElementById('pd' + i);
       if (!el) continue;
       if (i <= currentInput.length) {
-        el.textContent = '●';
-        el.style.color = '#d4af37';
+        // ✨ 直接顯現具體輸入的數字 (金色大字 + 符文金光)
+        el.textContent = currentInput[i - 1];
+        el.style.color = '#fffbe6';
         el.style.borderColor = '#d4af37';
+        el.style.background = 'rgba(25, 45, 36, 0.95)';
+        el.style.boxShadow = '0 0 15px rgba(212, 175, 55, 0.75), inset 0 0 10px rgba(212, 175, 55, 0.4)';
+        el.style.transform = 'scale(1.08)';
       } else {
         el.textContent = '-';
-        el.style.color = '#3dfacb';
-        el.style.borderColor = '#3dfacb';
+        el.style.color = 'rgba(61, 250, 203, 0.45)';
+        el.style.borderColor = 'rgba(61, 250, 203, 0.3)';
+        el.style.background = 'rgba(0, 0, 0, 0.85)';
+        el.style.boxShadow = 'none';
+        el.style.transform = 'scale(1)';
       }
     }
-    if (bootPwdInput) {
+    if (bootPwdInput && bootPwdInput.value !== currentInput) {
       bootPwdInput.value = currentInput;
     }
   }
 
+  let lastInputTime = 0;
   function handleInput(char) {
     if (isOpening || isJumpscaring) return;
     
+    // 防重複過快連擊 (50ms)
+    const now = Date.now();
+    if (now - lastInputTime < 40 && char !== 'clear' && char !== 'backspace') return;
+    lastInputTime = now;
+
     if (char === 'clear') {
       currentInput = '';
       updateDisplay();
@@ -398,7 +411,7 @@ function initBootScreen() {
       return;
     }
 
-    if (currentInput.length < 6) {
+    if (currentInput.length < 6 && char >= '0' && char <= '9') {
       currentInput += char;
       playBootClickSound();
       updateDisplay();
@@ -410,7 +423,7 @@ function initBootScreen() {
 
   window.handleBootKeypad = handleInput;
 
-  // 直接為所有按鍵綁定高靈敏度點擊與觸控事件
+  // 為所有按鍵綁定點擊與觸控
   const numPad = document.getElementById('quick-num-pad');
   if (numPad) {
     numPad.addEventListener('click', (e) => {
@@ -426,10 +439,13 @@ function initBootScreen() {
     numPad.addEventListener('touchstart', (e) => {
       const btn = e.target.closest('.btn-key');
       if (btn) {
-        // 觸控即時震動回饋
-        if (navigator.vibrate) navigator.vibrate(15);
+        const key = btn.getAttribute('data-key');
+        if (key) {
+          handleInput(key);
+          if (navigator.vibrate) navigator.vibrate(15);
+        }
       }
-    }, { passive: true });
+    }, { passive: false });
   }
 
   // 專為平板與手機提供點擊聚焦喚醒虛擬鍵盤
