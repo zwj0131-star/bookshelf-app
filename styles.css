@@ -667,36 +667,38 @@ input, textarea, select {
   object-fit: contain;
   border-radius: 16px;
   filter: drop-shadow(0 0 35px rgba(255, 0, 30, 0.6));
-  transition: transform 0.8s cubic-bezier(0.15, 0.85, 0.25, 1);
-  animation: ghostFloat 3.5s ease-in-out infinite alternate;
+  transition: transform 0.65s cubic-bezier(0.18, 0.89, 0.32, 1.25), opacity 0.5s ease, filter 0.5s ease;
 }
 
-@keyframes ghostFloat {
-  0% { transform: translateY(0px) rotate(-1deg); }
-  100% { transform: translateY(-14px) rotate(1.5deg); }
-}
-
-/* 4 階女鬼從門深處走出門外的漸進逼近姿態 (衣服顏色 100% 固定不變，只變身形距離) */
+/* 4 階極致顯著的逼近躍進 (0.38x 遠處深處 ➔ 0.78x 跨出門檻 ➔ 1.30x 身前逼近 ➔ 1.88x 貼面暴走) */
 .ghost-emergence-container.stage-1 .ghost-spirit {
-  transform: scale(0.65) translateY(25px);
+  transform: scale(0.38) translateY(60px);
+  opacity: 0.75;
+  filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.5)) blur(1.5px);
 }
 
 .ghost-emergence-container.stage-2 .ghost-spirit {
-  transform: scale(0.9) translateY(0px);
+  transform: scale(0.78) translateY(20px);
+  opacity: 0.95;
+  filter: drop-shadow(0 0 30px rgba(255, 0, 0, 0.7)) blur(0px);
 }
 
 .ghost-emergence-container.stage-3 .ghost-spirit {
-  transform: scale(1.15) translateY(-15px);
+  transform: scale(1.30) translateY(-15px);
+  opacity: 1;
+  filter: drop-shadow(0 0 45px rgba(255, 0, 0, 0.9));
 }
 
 .ghost-emergence-container.stage-4 .ghost-spirit {
-  transform: scale(1.45) translateY(-25px);
-  animation: ghostFrenziedTremor 0.1s infinite alternate;
+  transform: scale(1.88) translateY(-30px);
+  opacity: 1;
+  filter: drop-shadow(0 0 65px red);
+  animation: ghostFrenziedShake 0.08s infinite alternate;
 }
 
-@keyframes ghostFrenziedTremor {
-  0% { transform: scale(1.45) translate(-6px, -28px) rotate(-1.5deg); }
-  100% { transform: scale(1.48) translate(6px, -32px) rotate(1.5deg); }
+@keyframes ghostFrenziedShake {
+  0% { transform: scale(1.88) translate(-6px, -28px) rotate(-1.5deg); }
+  100% { transform: scale(1.92) translate(6px, -32px) rotate(1.5deg); }
 }
 
 /* ==========================================================================
