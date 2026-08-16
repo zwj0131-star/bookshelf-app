@@ -491,7 +491,7 @@ function initBootScreen() {
 
     playBootGateOpenSound();
 
-    bootScreen.classList.remove('ghost-cracked', 'ghost-stage-1', 'ghost-stage-2', 'ghost-stage-3', 'ghost-stage-4');
+    bootScreen.classList.remove('ghost-cracked', 'ghost-active', 'ghost-stage-1', 'ghost-stage-2', 'ghost-stage-3', 'ghost-stage-4');
     if (ghostEmergence) {
       ghostEmergence.className = 'ghost-emergence-container';
     }
@@ -519,6 +519,7 @@ function initBootScreen() {
 
     playBootGhostScreamSound();
     bootScreen.classList.add('shake-intense');
+    bootScreen.classList.add('ghost-active');
     if (bloodOverlay) bloodOverlay.classList.add('flash');
 
     // 青銅大門 3D 向外撕裂洞開，展現女鬼跨出大門的震撼視覺
@@ -581,7 +582,7 @@ function initBootScreen() {
         const skyModal = document.getElementById('sky-abduction-modal');
         if (skyModal) skyModal.classList.remove('active');
         if (ghostEmergence) ghostEmergence.className = 'ghost-emergence-container';
-        bootScreen.classList.remove('ghost-stage-1', 'ghost-stage-2', 'ghost-stage-3', 'ghost-stage-4');
+        bootScreen.classList.remove('ghost-active', 'ghost-stage-1', 'ghost-stage-2', 'ghost-stage-3', 'ghost-stage-4');
         if (bloodOverlay) bloodOverlay.classList.remove('flash');
         failCount = 0;
         currentInput = '';

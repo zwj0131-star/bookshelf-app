@@ -334,13 +334,25 @@
     0 0 35px rgba(212, 175, 55, 0.6),
     inset 0 0 35px rgba(0, 0, 0, 0.95),
     inset 0 0 15px rgba(61, 250, 203, 0.2);
-  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
   pointer-events: auto !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   backface-visibility: hidden;
   will-change: transform, opacity;
+}
+
+/* 一旦輸錯密碼觸發女鬼現身，密碼盤流暢下移至中下方，把整個大門中央 100% 騰出給全身女鬼！ */
+.boot-screen.ghost-active .lock-mechanism {
+  top: 68%;
+  transform: translate(-50%, -50%) scale(0.88);
+  box-shadow: 
+    0 0 0 4px rgba(10, 20, 16, 0.9),
+    0 0 0 6px rgba(255, 50, 50, 0.6),
+    0 15px 45px rgba(0, 0, 0, 0.95),
+    0 0 30px rgba(255, 30, 39, 0.6),
+    inset 0 0 30px rgba(0, 0, 0, 0.95);
 }
 
 .boot-screen.opening .lock-mechanism {
@@ -357,11 +369,11 @@
 }
 
 @keyframes lockErrorShake {
-  10%, 90% { transform: translate(-54%, -50%) rotate(-1.5deg); }
-  20%, 80% { transform: translate(-46%, -50%) rotate(2deg); }
-  30%, 50%, 70% { transform: translate(-56%, -50%) rotate(-2deg); }
-  40%, 60% { transform: translate(-44%, -50%) rotate(2deg); }
-  100% { transform: translate(-50%, -50%) rotate(0deg); }
+  10%, 90% { transform: translate(-54%, -50%) rotate(-1.5deg) scale(0.88); }
+  20%, 80% { transform: translate(-46%, -50%) rotate(2deg) scale(0.88); }
+  30%, 50%, 70% { transform: translate(-56%, -50%) rotate(-2deg) scale(0.88); }
+  40%, 60% { transform: translate(-44%, -50%) rotate(2deg) scale(0.88); }
+  100% { transform: translate(-50%, -50%) rotate(0deg) scale(0.88); }
 }
 
 /* 只有第 5 次被抓去天上時，鎖盤才隨視角狂暴升天 */
@@ -623,16 +635,15 @@ input, textarea, select {
   touch-action: auto !important;
 }
 
-/* 突發極限驚悚 紅衣女鬼層 (位於青銅門前側、密碼盤後方，全身清晰可見) */
+/* 突發極限驚悚 紅衣女鬼層 (位於青銅門中央大門裂縫處，100% 全身無遮擋顯現) */
 .ghost-emergence-container {
   position: absolute;
-  top: 50%;
+  top: 38%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100vw;
-  height: 100vh;
-  max-width: 900px;
-  max-height: 900px;
+  width: 90vw;
+  height: 520px;
+  max-width: 580px;
   z-index: 60 !important;
   pointer-events: none;
   display: flex;
@@ -651,46 +662,45 @@ input, textarea, select {
 
 .ghost-spirit {
   position: absolute;
-  width: 90%;
-  height: 95%;
-  max-width: 650px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   border-radius: 16px;
-  filter: contrast(1.4) saturate(1.6) brightness(1.2) drop-shadow(0 0 45px rgba(255, 0, 50, 0.85)) drop-shadow(0 0 90px rgba(0, 255, 136, 0.5));
+  filter: contrast(1.4) saturate(1.6) brightness(1.25) drop-shadow(0 0 45px rgba(255, 0, 50, 0.85)) drop-shadow(0 0 90px rgba(0, 255, 136, 0.5));
   transition: transform 0.8s cubic-bezier(0.15, 0.85, 0.25, 1), filter 0.8s ease;
   animation: ghostFloat 3.5s ease-in-out infinite alternate;
 }
 
 @keyframes ghostFloat {
   0% { transform: translateY(0px) rotate(-1deg); }
-  100% { transform: translateY(-18px) rotate(1.5deg); }
+  100% { transform: translateY(-14px) rotate(1.5deg); }
 }
 
-/* 4 階女鬼走出門的漸進逼近姿態 (頭部面孔始終在密碼盤上方或兩側清晰露出) */
+/* 4 階女鬼從門深處走出門外的漸進逼近姿態 (100% 全身可見，頭、面、黑髮、血衣、雙足全露) */
 .ghost-emergence-container.stage-1 .ghost-spirit {
-  transform: scale(0.72) translateY(-75px);
+  transform: scale(0.65) translateY(25px);
   filter: contrast(1.3) brightness(1.15) drop-shadow(0 0 35px #00ff88);
 }
 
 .ghost-emergence-container.stage-2 .ghost-spirit {
-  transform: scale(0.98) translateY(-40px);
+  transform: scale(0.9) translateY(0px);
   filter: contrast(1.45) saturate(1.5) brightness(1.25) drop-shadow(0 0 55px #ff0033);
 }
 
 .ghost-emergence-container.stage-3 .ghost-spirit {
-  transform: scale(1.28) translateY(-10px);
+  transform: scale(1.15) translateY(-15px);
   filter: contrast(1.6) saturate(1.7) brightness(1.35) drop-shadow(0 0 75px red) drop-shadow(0 0 100px #00ff88);
 }
 
 .ghost-emergence-container.stage-4 .ghost-spirit {
-  transform: scale(1.65) translateY(-20px);
+  transform: scale(1.45) translateY(-25px);
   filter: contrast(1.8) saturate(1.9) brightness(1.45) drop-shadow(0 0 100px red) drop-shadow(0 0 150px #ff0055);
   animation: ghostFrenziedTremor 0.1s infinite alternate;
 }
 
 @keyframes ghostFrenziedTremor {
-  0% { transform: scale(1.65) translate(-6px, -24px) rotate(-1.5deg); }
-  100% { transform: scale(1.68) translate(6px, -28px) rotate(1.5deg); }
+  0% { transform: scale(1.45) translate(-6px, -28px) rotate(-1.5deg); }
+  100% { transform: scale(1.48) translate(6px, -32px) rotate(1.5deg); }
 }
 
 /* ==========================================================================
