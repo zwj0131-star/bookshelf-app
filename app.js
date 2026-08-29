@@ -3,8 +3,13 @@
  * 適用於個人藏書整理與自主學習成果展現
  */
 
-// 預設範例資料（供第一次載入或重置時使用）
-const DEFAULT_BOOKS = [];
+// 預設藏書資料庫引用（由 books-data.js 注入 55 本藏書）
+const getDefaultLibrary = () => {
+  if (typeof DEFAULT_BOOKS !== 'undefined' && Array.isArray(DEFAULT_BOOKS) && DEFAULT_BOOKS.length > 0) {
+    return DEFAULT_BOOKS;
+  }
+  return [];
+};
 
 // 應用程式狀態 (State)
 let books = [];
@@ -615,19 +620,27 @@ function initBootScreen() {
   updateDisplay();
 }
 
-// 從 LocalStorage 載入資料
+// 從 LocalStorage 載入資料 (若無資料或為空，自動載入 55 本預設藏書)
 function loadBooksFromStorage() {
+  const defaultList = getDefaultLibrary();
   const stored = localStorage.getItem('my_bookshelf_data');
   if (stored) {
     try {
       books = JSON.parse(stored);
+      // 如果目前書櫃是空的，自動載入預設 55 本藏書
+      if (!Array.isArray(books) || books.length === 0) {
+        if (defaultList.length > 0) {
+          books = JSON.parse(JSON.stringify(defaultList));
+          saveBooksToStorage();
+        }
+      }
     } catch (e) {
       console.error('解析 LocalStorage 失敗，使用預設資料', e);
-      books = [...DEFAULT_BOOKS];
+      books = JSON.parse(JSON.stringify(defaultList));
       saveBooksToStorage();
     }
   } else {
-    books = [...DEFAULT_BOOKS];
+    books = JSON.parse(JSON.stringify(defaultList));
     saveBooksToStorage();
   }
 }
@@ -1121,13 +1134,15 @@ function handleImportJson(e) {
   reader.readAsText(file);
 }
 
-// 清空所有書籍
+// 還原為預設藏書資料庫 (55 本書籍)
 function resetToDemoData() {
-  if (confirm('確定要清空所有書籍資料嗎？此操作無法復原。')) {
-    books = [];
+  const defaultList = getDefaultLibrary();
+  if (confirm(`確定要將書櫃重置還原為預設的 ${defaultList.length} 本藏書嗎？`)) {
+    books = JSON.parse(JSON.stringify(defaultList));
     saveBooksToStorage();
     renderApp();
     closeModal('modal-backup');
+    alert(`已成功還原並載入 ${books.length} 本書籍資料！`);
   }
 }
 
