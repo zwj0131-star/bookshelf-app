@@ -17,127 +17,55 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@600;900&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css?v=4.2.0">
+  <link rel="stylesheet" href="styles.css?v=4.3.0">
   <style>
-    /* 頂端極致醒目作者榮譽金匾 (開門前 100% 一眼看見) */
-    .boot-grand-brand {
-      position: absolute;
-      top: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 85;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: linear-gradient(135deg, rgba(20, 36, 30, 0.96) 0%, rgba(10, 18, 14, 0.98) 100%);
-      border: 2.5px solid #ffd700;
-      border-radius: 35px;
-      padding: 8px 26px;
-      box-shadow: 0 0 30px rgba(255, 215, 0, 0.85), 0 8px 30px rgba(0, 0, 0, 0.95), inset 0 0 15px rgba(255, 215, 0, 0.35);
-      white-space: nowrap;
-      pointer-events: none;
-      animation: grandBrandGlow 2.5s ease-in-out infinite alternate;
-    }
-
-    @keyframes grandBrandGlow {
-      0% {
-        box-shadow: 0 0 18px rgba(255, 215, 0, 0.6), 0 8px 25px rgba(0, 0, 0, 0.95), inset 0 0 10px rgba(255, 215, 0, 0.25);
-        border-color: #ffd700;
-      }
-      100% {
-        box-shadow: 0 0 40px rgba(255, 235, 80, 1), 0 8px 35px rgba(0, 0, 0, 0.98), inset 0 0 22px rgba(255, 245, 140, 0.6);
-        border-color: #ffffff;
-      }
-    }
-
-    .boot-grand-brand .grand-crown {
-      font-size: 1.5rem;
-      filter: drop-shadow(0 0 8px #ffd700);
-    }
-
-    .boot-grand-brand .grand-name {
-      font-size: 1.45rem;
-      font-weight: 900;
-      letter-spacing: 3px;
-      color: #ffffff;
-      text-shadow: 0 0 12px #ffd700, 0 0 25px rgba(255, 170, 0, 1), 0 2px 4px #000;
-      font-family: 'Noto Serif TC', 'Cinzel', serif;
-    }
-
-    .boot-grand-brand .grand-dot {
-      color: #ffd700;
-      font-size: 1.1rem;
-    }
-
-    .boot-grand-brand .grand-sub {
-      font-size: 0.9rem;
-      color: #8cead3;
-      letter-spacing: 2px;
-      font-weight: 600;
-    }
-
-    /* 調整原本提示框位置，避免與頂部金匾重疊 */
-    .boot-status-toast {
-      top: 76px !important;
-    }
-
-    /* 密碼盤內部的金色作者徽章 */
+    /* 自然典雅的作者落款銘文 (不刻意但清晰可見) */
     .boot-author-credit {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      margin: 6px 0 4px !important;
-    }
-
-    .boot-author-credit .author-highlight {
-      font-size: 1.2rem !important;
-      font-weight: 900 !important;
-      letter-spacing: 2.5px !important;
-      color: #ffffff !important;
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.45) 0%, rgba(255, 80, 0, 0.4) 100%) !important;
-      border: 2px solid #ffd700 !important;
-      box-shadow: 0 0 25px rgba(255, 215, 0, 0.9), inset 0 0 12px rgba(255, 230, 100, 0.6) !important;
-      border-radius: 25px !important;
-      padding: 5px 18px !important;
-      text-shadow: 0 0 14px rgba(255, 220, 50, 1), 0 2px 5px #000 !important;
       display: inline-flex !important;
       align-items: center !important;
-      animation: authorGlowPulse 2.4s ease-in-out infinite alternate !important;
+      justify-content: center !important;
+      gap: 6px !important;
+      margin: 6px 0 4px !important;
+      padding: 3px 14px !important;
+      background: rgba(6, 15, 12, 0.65) !important;
+      border: 1px solid rgba(212, 175, 55, 0.45) !important;
+      border-radius: 20px !important;
+      backdrop-filter: blur(4px) !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), inset 0 0 8px rgba(212, 175, 55, 0.15) !important;
     }
 
-    /* 手機畫面自適應 */
-    @media (max-width: 600px) {
-      .boot-grand-brand {
-        top: 10px !important;
-        padding: 5px 16px !important;
-        gap: 6px !important;
-      }
-      .boot-grand-brand .grand-name {
-        font-size: 1.15rem !important;
-        letter-spacing: 2px !important;
-      }
-      .boot-grand-brand .grand-sub {
-        font-size: 0.75rem !important;
-      }
-      .boot-status-toast {
-        top: 62px !important;
-        font-size: 0.8rem !important;
-        padding: 6px 14px !important;
-      }
+    .boot-author-credit .author-name {
+      font-size: 0.95rem !important;
+      font-weight: 700 !important;
+      letter-spacing: 2px !important;
+      color: #f7e8b6 !important;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 8px rgba(212, 175, 55, 0.4) !important;
+      font-family: 'Noto Serif TC', serif !important;
+    }
+
+    .boot-author-credit .author-sep {
+      color: rgba(212, 175, 55, 0.6) !important;
+      font-size: 0.8rem !important;
+    }
+
+    .boot-author-credit .author-sub {
+      font-size: 0.78rem !important;
+      color: #8dafa3 !important;
+      letter-spacing: 1.5px !important;
+      font-weight: 500 !important;
+    }
+
+    /* 書櫃主頁面副標題署名 */
+    .app-header .sub-author {
+      color: #d4af37;
+      font-weight: 600;
+      letter-spacing: 1px;
     }
   </style>
 </head>
 <body>
   <!-- 3D 古老青銅巨門開場 (Boot Screen) -->
   <div id="boot-screen" class="boot-screen">
-    <!-- 頂端震撼作者榮譽牌匾 (開場一眼直接可見) -->
-    <div class="boot-grand-brand">
-      <span class="grand-crown">👑</span>
-      <span class="grand-name">詹汶瑾 出品</span>
-      <span class="grand-dot">·</span>
-      <span class="grand-sub">自主學習專案</span>
-    </div>
-
     <!-- 狀態提示 -->
     <div id="boot-status-toast" class="boot-status-toast">📜 請輸入密碼解鎖青銅古門 (預設密碼: 520945)</div>
 
@@ -178,7 +106,8 @@
       <input type="tel" inputmode="numeric" pattern="[0-9]*" id="boot-password-input" class="boot-password-real-input" maxlength="6" autocomplete="off">
       
       <div class="boot-author-credit">
-        <span class="author-highlight">✦ 詹汶瑾 出品 ✦</span>
+        <span class="author-name">詹汶瑾 出品</span>
+        <span class="author-sep">·</span>
         <span class="author-sub">自主學習專案</span>
       </div>
       <div class="hint-text">點擊下方符文按鍵或直接打字</div>
@@ -257,7 +186,7 @@
         </div>
         <div>
           <h1>我的個人書櫃與借閱統計</h1>
-          <p class="subtitle">自主學習成果展現・藏書整理與閱讀筆記 · <span class="badge-author-brand" style="background: rgba(212, 175, 55, 0.25); border: 1.5px solid #ffd700; color: #ffd700; font-size: 0.88rem; font-weight: 700; padding: 2px 10px; border-radius: 12px; display: inline-block; box-shadow: 0 0 10px rgba(255, 215, 0, 0.35);">👑 詹汶瑾 出品</span></p>
+          <p class="subtitle">自主學習成果展現・藏書整理與閱讀筆記 <span class="sub-author">· 詹汶瑾 出品</span></p>
         </div>
       </div>
       <div class="header-actions">
