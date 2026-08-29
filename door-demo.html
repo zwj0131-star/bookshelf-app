@@ -347,7 +347,7 @@
       animation: ghostBurstFromGate 1.8s cubic-bezier(0.15, 0.85, 0.25, 1) forwards;
     }
 
-    /* 厲鬼從青銅門裂縫深處衝出的震撼軌跡 */
+    /* 厲鬼從青銅門裂縫深處衝出的震撼軌跡 (變大時跟隨下移，完整展示恐怖面孔與全身) */
     @keyframes ghostBurstFromGate {
       0% {
         transform: scale(0.08) translateY(20px) rotate(-3deg);
@@ -359,15 +359,15 @@
         filter: brightness(1.8) contrast(1.5) drop-shadow(0 0 60px #00ff88) drop-shadow(0 0 90px red);
       }
       45% {
-        transform: scale(1.35) translateY(-10px) rotate(2deg);
+        transform: scale(1.35) translateY(50px) rotate(2deg);
         filter: brightness(1.6) contrast(1.4) drop-shadow(0 0 80px red);
       }
       75% {
-        transform: scale(1.45) translateY(5px) rotate(-1deg);
+        transform: scale(1.65) translateY(100px) rotate(-1deg);
         opacity: 0.95;
       }
       100% {
-        transform: scale(2.0) translateY(-30px);
+        transform: scale(2.0) translateY(160px);
         opacity: 0;
         filter: brightness(0) blur(25px);
       }

@@ -696,35 +696,35 @@ input, textarea, select {
   transition: transform 0.65s cubic-bezier(0.18, 0.89, 0.32, 1.25), opacity 0.5s ease, filter 0.5s ease;
 }
 
-/* 4 階極致顯著的逼近躍進 (0.38x 遠處深處 ➔ 0.78x 跨出門檻 ➔ 1.30x 身前逼近 ➔ 1.88x 貼面暴走) */
+/* 4 階極致顯著的逼近躍進 (0.40x 遠處深處 ➔ 0.80x 跨出門檻 ➔ 1.25x 身前逼近 ➔ 1.75x 貼面下移暴走，完整露出恐怖面孔與全身) */
 .ghost-emergence-container.stage-1 .ghost-spirit {
-  transform: scale(0.38) translateY(60px);
+  transform: scale(0.40) translateY(50px);
   opacity: 0.75;
   filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.5)) blur(1.5px);
 }
 
 .ghost-emergence-container.stage-2 .ghost-spirit {
-  transform: scale(0.78) translateY(20px);
+  transform: scale(0.80) translateY(40px);
   opacity: 0.95;
   filter: drop-shadow(0 0 30px rgba(255, 0, 0, 0.7)) blur(0px);
 }
 
 .ghost-emergence-container.stage-3 .ghost-spirit {
-  transform: scale(1.30) translateY(-15px);
+  transform: scale(1.25) translateY(65px);
   opacity: 1;
   filter: drop-shadow(0 0 45px rgba(255, 0, 0, 0.9));
 }
 
 .ghost-emergence-container.stage-4 .ghost-spirit {
-  transform: scale(1.88) translateY(-30px);
+  transform: scale(1.75) translateY(145px);
   opacity: 1;
   filter: drop-shadow(0 0 65px red);
   animation: ghostFrenziedShake 0.08s infinite alternate;
 }
 
 @keyframes ghostFrenziedShake {
-  0% { transform: scale(1.88) translate(-6px, -28px) rotate(-1.5deg); }
-  100% { transform: scale(1.92) translate(6px, -32px) rotate(1.5deg); }
+  0% { transform: scale(1.75) translate(-6px, 142px) rotate(-1.5deg); }
+  100% { transform: scale(1.78) translate(6px, 148px) rotate(1.5deg); }
 }
 
 /* ==========================================================================
@@ -775,7 +775,7 @@ input, textarea, select {
   to { transform: translateY(100px); }
 }
 
-/* 女鬼抓人沖天動畫 (貼臉直撲 -> 狂暴拽上天空，衣服顏色純真不變色) */
+/* 女鬼抓人沖天動畫 (貼臉直撲向下位移露出面孔 -> 狂暴拽上天空) */
 .sky-ghost-attacker {
   position: absolute;
   width: 90vw;
@@ -791,15 +791,15 @@ input, textarea, select {
 
 @keyframes skyGhostGrabAndFly {
   0% {
-    transform: scale(0.6) translateY(200px) rotate(0deg);
+    transform: scale(0.6) translateY(240px) rotate(0deg);
     opacity: 0;
   }
   15% {
-    transform: scale(2.2) translateY(20px) rotate(-4deg);
+    transform: scale(2.0) translateY(180px) rotate(-4deg);
     opacity: 1;
   }
   35% {
-    transform: scale(2.4) translateY(-60px) rotate(3deg);
+    transform: scale(2.2) translateY(130px) rotate(3deg);
   }
   60% {
     transform: scale(1.6) translateY(-80vh) rotate(-15deg);
