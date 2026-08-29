@@ -620,28 +620,35 @@ function initBootScreen() {
   updateDisplay();
 }
 
-// 從 LocalStorage 載入資料 (若無資料或為空，自動載入 55 本預設藏書)
+const DATA_VERSION_KEY = 'my_bookshelf_version';
+const CURRENT_DATA_VERSION = 'v20260829_55books_fixed';
+
+// 從 LocalStorage 載入資料 (自動同步 55 本完整預設藏書)
 function loadBooksFromStorage() {
   const defaultList = getDefaultLibrary();
+  const savedVersion = localStorage.getItem(DATA_VERSION_KEY);
   const stored = localStorage.getItem('my_bookshelf_data');
-  if (stored) {
-    try {
-      books = JSON.parse(stored);
-      // 如果目前書櫃是空的，自動載入預設 55 本藏書
-      if (!Array.isArray(books) || books.length === 0) {
-        if (defaultList.length > 0) {
-          books = JSON.parse(JSON.stringify(defaultList));
-          saveBooksToStorage();
-        }
-      }
-    } catch (e) {
-      console.error('解析 LocalStorage 失敗，使用預設資料', e);
-      books = JSON.parse(JSON.stringify(defaultList));
-      saveBooksToStorage();
-    }
-  } else {
+
+  // 如果版本不符（舊版本或尚未載入 55 本書），強制更新為 55 本完整書庫！
+  if (savedVersion !== CURRENT_DATA_VERSION || !stored) {
     books = JSON.parse(JSON.stringify(defaultList));
     saveBooksToStorage();
+    localStorage.setItem(DATA_VERSION_KEY, CURRENT_DATA_VERSION);
+    return;
+  }
+
+  try {
+    books = JSON.parse(stored);
+    if (!Array.isArray(books) || books.length === 0) {
+      books = JSON.parse(JSON.stringify(defaultList));
+      saveBooksToStorage();
+      localStorage.setItem(DATA_VERSION_KEY, CURRENT_DATA_VERSION);
+    }
+  } catch (e) {
+    console.error('解析 LocalStorage 失敗，使用預設資料', e);
+    books = JSON.parse(JSON.stringify(defaultList));
+    saveBooksToStorage();
+    localStorage.setItem(DATA_VERSION_KEY, CURRENT_DATA_VERSION);
   }
 }
 
